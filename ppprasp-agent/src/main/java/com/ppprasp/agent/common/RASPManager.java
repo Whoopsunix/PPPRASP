@@ -10,8 +10,10 @@ import java.util.List;
  * @author Whoopsunix
  */
 public class RASPManager {
-    public static void block(RASPContext.Context context, String className, String methodName) throws Throwable {
-
+    /**
+     * 打印调用栈
+     */
+    public static void showStackTracer() {
         try {
             // 打印调用栈
             List<String> stackList = StackTracer.getStack();
@@ -22,11 +24,6 @@ public class RASPManager {
         } catch (Exception e) {
 
         }
-
-        HttpServletResponse response = context.getHttpBundle().getResponse();
-        changeResponse(response);
-
-        throwException(className, methodName);
     }
 
     /**
@@ -48,12 +45,15 @@ public class RASPManager {
     /**
      * 执行拦截
      *
-     * @param className
-     * @param methodName
+     * @param blockInfo
      * @throws Throwable
      */
-    public static void throwException(String className, String methodName) throws Throwable {
-        String blockInfo = String.format("[!] Rce blocked by pppRASP, %s.%s [!]", className, methodName);
+    public static void throwException(String blockInfo) throws Throwable {
+        // 打印
+        System.out.println(blockInfo);
+
+        // 记录日志
+
         ProcessController.throwsImmediately(new Exception(blockInfo));
     }
 

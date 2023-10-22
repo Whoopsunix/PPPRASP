@@ -37,9 +37,11 @@ public class RceHook implements Module, ModuleLifecycle {
                         protected void before(Advice advice) throws Throwable {
                             RASPContext.Context context = RASPContext.getContext();
                             if (context != null) {
-                                RASPManager.block(context, className, methodName);
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", "RCE", className, methodName);
+                                RASPManager.throwException(blockInfo);
                             }
-
                             super.before(advice);
                         }
 
@@ -62,9 +64,11 @@ public class RceHook implements Module, ModuleLifecycle {
                         @Override
                         protected void before(Advice advice) throws Throwable {
                             RASPContext.Context context = RASPContext.getContext();
-
                             if (context != null) {
-                                RASPManager.block(context, className, methodName);
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", "RCE", className, methodName);
+                                RASPManager.throwException(blockInfo);
                             }
 
                             super.before(advice);

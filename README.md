@@ -18,7 +18,6 @@ mvn clean package
 
 2. 下载 [jvm-sandbox 二进制包](https://github.com/alibaba/jvm-sandbox/releases)
 3. 将打包好的项目移动到 sandbox/sandbox-module 文件夹下
-
 4. 启动
 
 -javaagent
@@ -32,9 +31,16 @@ attach
 ```
 ```
 
+# 0x01 漏洞检测覆盖
 
+## 命令执行
 
+- [x] 参考 [jrasp](https://github.com/jvm-rasp/jrasp-agent) 实现了线程注入的拦截
+- [x] Jvm-sandbox 1.4.0 实现 native 方法拦截
 
+## 反序列化
+
+- [x] 黑名单拦截，写了个 `com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl` 意思意思
 
 
 
