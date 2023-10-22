@@ -3,7 +3,6 @@ package com.ppprasp.agent.hook;
 import com.alibaba.jvm.sandbox.api.Information;
 import com.alibaba.jvm.sandbox.api.Module;
 import com.alibaba.jvm.sandbox.api.ModuleLifecycle;
-import com.alibaba.jvm.sandbox.api.ProcessController;
 import com.alibaba.jvm.sandbox.api.listener.ext.Advice;
 import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
@@ -37,19 +36,8 @@ public class RceHook implements Module, ModuleLifecycle {
                         @Override
                         protected void before(Advice advice) throws Throwable {
                             RASPContext.Context context = RASPContext.getContext();
-
                             if (context != null) {
                                 RASPManager.block(context, className, methodName);
-
-//                                HttpServletResponse response = context.getHttpBundle().getResponse();
-//                                response.setStatus(500);
-//                                response.setContentType("text/html; charset=UTF-8");
-//                                PrintWriter out = response.getWriter();
-//                                out.println("<html><body><h1>Block by pppRASP</h1></body></html>");
-//
-//
-//
-//                                ProcessController.throwsImmediately(new Exception(String.format("[!] Rce blocked by pppRASP, %s.%s [!]", className, methodName)));
                             }
 
                             super.before(advice);
@@ -73,7 +61,12 @@ public class RceHook implements Module, ModuleLifecycle {
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
-                            ProcessController.throwsImmediately(new Exception(String.format("[!] Rce blocked by ppprasp, %s.%s [!]", className, methodName)));
+                            RASPContext.Context context = RASPContext.getContext();
+
+                            if (context != null) {
+                                RASPManager.block(context, className, methodName);
+                            }
+
                             super.before(advice);
                         }
                     });
