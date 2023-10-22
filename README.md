@@ -6,7 +6,7 @@ By. Whoopsunix
 
 jvm-sandbox 没有一个很详细的文档，不过好在源代码注释非常多，并且给出了 [Module 编写例子](https://github.com/oldmanpushcart/sandbox-module-example/blob/master/README.md) ，并且在 [sandbox-debug-module](https://github.com/alibaba/jvm-sandbox/blob/1.4.0/sandbox-debug-module) 中提供了很多工具类代码，真不错啊真不错
 
-🚩 后续同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 中的例子来实现 RASP 的 HOOK
+🚩 后续同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 中的例子来实现更多漏洞的 HOOK
 
 ⭐️ 只会拦截来自 http 请求的 HOOK 点触发
 
