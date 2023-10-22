@@ -6,11 +6,17 @@ By. Whoopsunix
 
 jvm-sandbox 没有一个很详细的文档，不过好在源代码注释非常多，并且给出了 [Module 编写例子](https://github.com/oldmanpushcart/sandbox-module-example/blob/master/README.md) ，并且在 [sandbox-debug-module](https://github.com/alibaba/jvm-sandbox/blob/1.4.0/sandbox-debug-module) 中提供了很多工具类代码，真不错啊真不错
 
+🚩 后续同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 中的例子来实现 RASP 的 HOOK
+
+⭐️ 只会拦截来自 http 请求的 HOOK 点触发
+
 ---------------
 
 # 0x00 Start
 
 1. 打包 ppprasp-agent 
+
+pom.xml 报错是正常的，不影响打包
 
 ```
 mvn clean package
@@ -29,9 +35,17 @@ mvn clean package
 attach
 
 ```
+# 进入沙箱执行脚本
+cd sandbox/bin
+
+# 挂载 目标JVM进程33342
+./sandbox.sh -p 33342
+
+# 卸载
+./sandbox.sh -p 33342 -S
 ```
 
-# 0x01 漏洞检测覆盖
+# 0x01 漏洞检测类型
 
 ## 命令执行
 
