@@ -50,11 +50,13 @@ cd sandbox/bin
 ## 命令执行
 
 - [x] 参考 [jrasp](https://github.com/jvm-rasp/jrasp-agent) 实现了线程注入的拦截
-- [x] Jvm-sandbox 1.4.0 实现 native 方法拦截
+- [x] Jvm-sandbox 1.4.0 实现 native 方法的 hook ，因此支持拦截 `forkAndExec()`
 
 ## 反序列化
 
 - [x] 黑名单拦截，写了个 `com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl` 意思意思
 
+## sql注入
 
+- [x] `com.mysql.cj.jdbc.StatementImpl` 类下 sql 执行语句拦截，没加语义词义分析
 
