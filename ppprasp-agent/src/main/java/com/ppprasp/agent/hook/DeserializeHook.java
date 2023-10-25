@@ -8,6 +8,7 @@ import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.check.DeserializeChecker;
+import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
 import org.kohsuke.MetaInfServices;
@@ -24,7 +25,9 @@ public class DeserializeHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-
+    /**
+     * java.io.ObjectInputStream.resolveClass()
+     */
     public void checkResolveClass() {
         try {
             String className = "java.io.ObjectInputStream";
@@ -82,6 +85,8 @@ public class DeserializeHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkResolveClass();
+        if (RASPConfig.isCheck("rasp-deserialize-hook", "resolveClass").equalsIgnoreCase("block")) {
+            checkResolveClass();
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
+import com.ppprasp.agent.common.RASPConfig;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
@@ -23,7 +24,9 @@ public class RceHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-
+    /**
+     * java.lang.ProcessBuilder.start()
+     */
     public void checkProcessBuilder() {
         try {
             String className = "java.lang.ProcessBuilder";
@@ -51,6 +54,9 @@ public class RceHook implements Module, ModuleLifecycle {
         }
     }
 
+    /**
+     * native java.lang.UNIXProcess.forkAndExec
+     */
     public void checkProcessImpl() {
         try {
             String className = "java.lang.UNIXProcess";
@@ -101,8 +107,13 @@ public class RceHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkProcessBuilder();
-        // native
-        checkProcessImpl();
+        if (RASPConfig.isCheck("rasp-rce-hook", "normal").equalsIgnoreCase("block")) {
+            checkProcessBuilder();
+        }
+
+        if (RASPConfig.isCheck("rasp-rce-hook", "native").equalsIgnoreCase("block")) {
+            // native
+            checkProcessImpl();
+        }
     }
 }

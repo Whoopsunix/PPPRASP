@@ -45,6 +45,16 @@ cd sandbox/bin
 ./sandbox.sh -p 33342 -S
 ```
 
+## sandbox 其他
+
+-d 可以向 Module 发送命令，eg. `-d 'sandbox-info/version'`
+
+-P 开启 Jetty 接口，`./sandbox.sh -p 80258 -P 1234`
+
+接口开启后可以通过 http 发送 -d 中的命令，eg. `/sandbox/default/module/http/sandbox-info/version`
+
+这部分内容没有文档可以参考 [sandbox-mgr-module](https://github.com/alibaba/jvm-sandbox/blob/c01c28ab5d7d97a64071a2aca261804c47a5347e/sandbox-mgr-module/src/main/java/com/alibaba/jvm/sandbox/module/mgr/ModuleMgrModule.java) 来自行构建
+
 # 0x01 基本漏洞检测类型 ing
 
 ## 命令执行

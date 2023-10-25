@@ -1,0 +1,24 @@
+hook:
+  - id:
+      rasp-rce-hook
+    enable:
+      false
+    algorithms:
+      - id: normal
+        action: block
+      - id: native
+        action: block
+  - id:
+      rasp-deserialize-hook
+    enable:
+      true
+    algorithms:
+      - id: resolveClass
+        action: block
+  - id:
+      rasp-sql-hook
+    enable:
+      true
+    algorithms:
+      - id: mysql
+        action: block

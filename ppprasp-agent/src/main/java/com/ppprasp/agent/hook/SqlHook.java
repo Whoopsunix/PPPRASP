@@ -8,6 +8,7 @@ import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.check.SqlChecker;
+import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
 import org.kohsuke.MetaInfServices;
@@ -24,7 +25,9 @@ public class SqlHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-
+    /**
+     * mysql com.mysql.cj.jdbc.StatementImpl 查询
+     */
     public void checkStatement() {
         try {
             String className = "com.mysql.cj.jdbc.StatementImpl";
@@ -79,6 +82,8 @@ public class SqlHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkStatement();
+        if (RASPConfig.isCheck("rasp-sql-hook", "mysql").equalsIgnoreCase("block")) {
+            checkStatement();
+        }
     }
 }
