@@ -7,13 +7,11 @@ import java.util.HashMap;
  */
 public class DeserializeChecker {
 
-    public static HashMap<String, Object> blackClassMap = new HashMap<String, Object>() {{
-        put("com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl", null);
-    }};
 
 
-    public static boolean isBlackClass(String className) {
-        if (blackClassMap.containsKey(className)) {
+
+    public static boolean isDangerousClass(String className) {
+        if (BlackClassInfo.sinkBlackClassMap.containsKey(className)) {
             return true;
         }
 

@@ -43,15 +43,12 @@ public class DeserializeHook implements Module, ModuleLifecycle {
                             String classNameWithSerialVersionUID = objectStreamClass.toString();
                             String className = objectStreamClass.getName();
 
-                            boolean isBlack = DeserializeChecker.isBlackClass(className);
-                            if (isBlack) {
-                                RASPContext.Context context = RASPContext.getContext();
-                                if (context != null) {
-                                    RASPManager.showStackTracer();
-                                    RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                    String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", "Deserialize", className);
-                                    RASPManager.throwException(blockInfo);
-                                }
+                            RASPContext.Context context = RASPContext.getContext();
+                            if (DeserializeChecker.isDangerousClass(className) && context != null) {
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", "Deserialize", className);
+                                RASPManager.throwException(blockInfo);
                             }
 
                             super.before(advice);

@@ -22,3 +22,12 @@ hook:
     algorithms:
       - id: mysql
         action: block
+  - id:
+      rasp-expression-hook
+    enable:
+      true
+    algorithms:
+      - id: spelExpression
+        action: log
+      - id: spelClass
+        action: block

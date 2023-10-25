@@ -70,5 +70,11 @@ cd sandbox/bin
 
 - [x] `com.mysql.cj.jdbc.StatementImpl` 类下 sql 执行语句拦截，没加语义词义分析
 
+## 表达式注入
+
+SPEL
+
+- [x] 黑名单拦截
+
 # 0x02 CVE漏洞检测 todo
 

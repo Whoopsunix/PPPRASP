@@ -42,14 +42,12 @@ public class SqlHook implements Module, ModuleLifecycle {
                         @Override
                         protected void before(Advice advice) throws Throwable {
                             RASPContext.Context context = RASPContext.getContext();
-                            if (context != null) {
-                                String sql = (String) advice.getParameterArray()[0];
-                                if (sql != null && SqlChecker.isDangerous(sql)) {
-                                    RASPManager.showStackTracer();
-                                    RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                    String blockInfo = String.format("[!] %s blocked by pppRASP, %s [!]", "Sql", sql);
-                                    RASPManager.throwException(blockInfo);
-                                }
+                            String sql = (String) advice.getParameterArray()[0];
+                            if (context != null && sql != null && SqlChecker.isDangerous(sql)) {
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s [!]", "Sql", sql);
+                                RASPManager.throwException(blockInfo);
                             }
                             super.before(advice);
                         }
