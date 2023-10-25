@@ -2,9 +2,13 @@
 
 By. Whoopsunix
 
-发现 [jvm-sandbox](https://github.com/alibaba/jvm-sandbox) 从 1.4.0 开始实现了 Native 的增强，正好写一个简单的 RASP Demo 来熟悉框架（~~其实是懒得用 ASM~~）
+发现 [jvm-sandbox](https://github.com/alibaba/jvm-sandbox) 从 1.4.0 开始实现了 Native 的增强，正好P写一个简单的 RASP Demo 来熟悉这个 AOP 框架（~~其实是懒得用 ASM~~）
 
-jvm-sandbox 没有一个很详细的文档，不过好在源代码注释非常多，并且给出了 [Module 编写例子](https://github.com/oldmanpushcart/sandbox-module-example/blob/master/README.md) ，并且在 [sandbox-debug-module](https://github.com/alibaba/jvm-sandbox/blob/1.4.0/sandbox-debug-module) 中提供了很多工具类代码，真不错啊真不错
+why jvm-sandbox？
+
++ AOP 框架、沙箱类隔离等架构优点，很难拒绝
++ 基层基于 ASM 实现，框架比较熟悉，后续有更复杂的需求时可以改源码方便
++ 虽然没有一个很详细的文档，不过好在源代码注释非常多，并且给出了 [Module 编写例子](https://github.com/oldmanpushcart/sandbox-module-example/blob/master/README.md)，在 [sandbox-debug-module](https://github.com/alibaba/jvm-sandbox/blob/1.4.0/sandbox-debug-module) 中提供了很多工具类代码
 
 🚩 同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 中的例子来实现更多漏洞的 HOOK。
 
