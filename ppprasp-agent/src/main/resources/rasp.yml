@@ -11,7 +11,7 @@ hook:
   - id:
       rasp-deserialize-hook
     enable:
-      true
+      false
     algorithms:
       - id: resolveClass
         action: block
@@ -31,3 +31,12 @@ hook:
         action: log
       - id: spelClass
         action: block
+  - id:
+      rasp-jni-hook
+    enable:
+      true
+    algorithms:
+      - id: jni
+        action: block
+
+

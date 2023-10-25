@@ -7,7 +7,6 @@ import com.alibaba.jvm.sandbox.api.listener.ext.Advice;
 import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
-import com.ppprasp.agent.check.DeserializeChecker;
 import com.ppprasp.agent.check.ExpressionChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
@@ -97,6 +96,8 @@ public class ExpressionHook implements Module, ModuleLifecycle {
 
         }
     }
+
+
 
     @Override
     public void onLoad() throws Throwable {

@@ -6,9 +6,9 @@ By. Whoopsunix
 
 jvm-sandbox 没有一个很详细的文档，不过好在源代码注释非常多，并且给出了 [Module 编写例子](https://github.com/oldmanpushcart/sandbox-module-example/blob/master/README.md) ，并且在 [sandbox-debug-module](https://github.com/alibaba/jvm-sandbox/blob/1.4.0/sandbox-debug-module) 中提供了很多工具类代码，真不错啊真不错
 
-🚩 同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 中的例子来实现更多漏洞的 HOOK
+🚩 同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 中的例子来实现更多漏洞的 HOOK。
 
-⭐️ 只会拦截来自 http 请求的 HOOK 点触发
+⭐️ 只会拦截来自 http 请求的 HOOK 点触发，可以使用项目配套测试环境进行测试 [vulEnv](https://github.com/Whoopsunix/PPPRASP/tree/main/vulEnv)，配套 [postman api 文件](https://github.com/Whoopsunix/PPPRASP/tree/main/vulEnvvulEnv.postman_collection.json)
 
 ---------------
 
@@ -75,6 +75,10 @@ cd sandbox/bin
 SPEL
 
 - [x] 黑名单拦截
+
+## JNI 注入
+
+- [x] hook 来自外部输入的 `java.lang.ClassLoader.loadLibrary0()`
 
 # 0x02 CVE漏洞检测 todo
 
