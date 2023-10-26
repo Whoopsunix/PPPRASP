@@ -5,7 +5,12 @@ package com.ppprasp.agent.check;
  */
 public class ExpressionChecker {
 
-    public static boolean isDangerousExpression(String expression) {
+    /**
+     * SPEL 语句检查
+     * @param expression
+     * @return
+     */
+    public static boolean isDangerousSPELExpression(String expression) {
         for (String className: BlackClassInfo.dangerousBlackClassMap.keySet()){
             if (expression.contains(className)) {
                 return true;
@@ -14,11 +19,30 @@ public class ExpressionChecker {
         return false;
     }
 
-    public static boolean isDangerousClass(String className) {
+    /**
+     * SPEL 类检查
+     * @param className
+     * @return
+     */
+    public static boolean isDangerousSPELClass(String className) {
         if (BlackClassInfo.dangerousBlackClassMap.containsKey(className)) {
             return true;
         }
 
+        return false;
+    }
+
+    /**
+     * OGNL 语句检查
+     * @param expression
+     * @return
+     */
+    public static boolean isDangerousOGNLExpression(String expression) {
+        for (String className: BlackClassInfo.dangerousBlackClassMap.keySet()){
+            if (expression.contains(className)) {
+                return true;
+            }
+        }
         return false;
     }
 }

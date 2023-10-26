@@ -12,7 +12,7 @@ why jvm-sandbox？
 
 🚩 同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 中的例子来实现更多漏洞的 HOOK。
 
-⭐️ 只会拦截来自 http 请求的 HOOK 点触发，可以使用项目配套测试环境进行测试 [vulEnv](https://github.com/Whoopsunix/PPPRASP/tree/main/vulEnv)，配套 [postman api 文件](https://github.com/Whoopsunix/PPPRASP/tree/main/vulEnvvulEnv.postman_collection.json)
+⭐️ 只会拦截来自 http 请求的 HOOK 点触发，可以使用项目配套测试环境进行测试 [vulEnv](vulEnv)，配套 [postman api 文件](vulEnv/vulEnv.postman_collection.json)
 
 ---------------
 
@@ -61,6 +61,8 @@ cd sandbox/bin
 
 # 0x01 基本漏洞检测类型 ing
 
+通过 [rasp.yml](ppprasp-agent/src/main/resources/rasp.yml) 配置文件来开启漏洞检测
+
 ## 命令执行
 
 - [x] 参考 [jrasp](https://github.com/jvm-rasp/jrasp-agent) 实现了线程注入的拦截
@@ -76,7 +78,7 @@ cd sandbox/bin
 
 ## 表达式注入
 
-SPEL
+SPEL、OGNL
 
 - [x] 黑名单拦截
 

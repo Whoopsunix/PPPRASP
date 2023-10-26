@@ -40,7 +40,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             Object object = advice.getTarget();
                             String expression = (String) Reflections.getFieldValue(object, "expression");
                             RASPContext.Context context = RASPContext.getContext();
-                            if (ExpressionChecker.isDangerousExpression(expression) && context != null) {
+                            if (ExpressionChecker.isDangerousSPELExpression(expression) && context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle().getResponse());
                                 String blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", "SPEL Expression", expression);
@@ -81,7 +81,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             System.out.println(mtdName);
 
                             RASPContext.Context context = RASPContext.getContext();
-                            if (ExpressionChecker.isDangerousClass(clsName) && context != null) {
+                            if (ExpressionChecker.isDangerousSPELClass(clsName) && context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle().getResponse());
                                 String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", "SPEL Expression", clsName);
@@ -97,6 +97,34 @@ public class ExpressionHook implements Module, ModuleLifecycle {
         }
     }
 
+    public void checkOGNLExpression() {
+        try {
+            String className = "ognl.Ognl";
+            new EventWatchBuilder(moduleEventWatcher)
+                    .onClass(Class.forName(className))
+                    .includeBootstrap()
+                    .onBehavior("getValue")
+                    .onBehavior("setValue")
+                    .onWatch(new AdviceListener() {
+                        @Override
+                        protected void before(Advice advice) throws Throwable {
+                            RASPContext.Context context = RASPContext.getContext();
+                            String ognl = (String) advice.getParameterArray()[0];
+
+                            if (ExpressionChecker.isDangerousOGNLExpression(ognl) && context != null) {
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", "OGNL Expression", ognl);
+                                RASPManager.throwException(blockInfo);
+                            }
+                            super.before(advice);
+                        }
+
+                    });
+        } catch (Exception e) {
+
+        }
+    }
 
 
     @Override
@@ -129,10 +157,17 @@ public class ExpressionHook implements Module, ModuleLifecycle {
         }
 
         /**
-         * 原始的表达式检测
+         * 原始的 SPEL 表达式检测
          */
         if (RASPConfig.isCheck("rasp-expression-hook", "spelExpression").equalsIgnoreCase("block")) {
             checkSPELExpression();
+        }
+
+        /**
+         * 原始的 OGNL 表达式检测
+         */
+        if (RASPConfig.isCheck("rasp-expression-hook", "ognlExpression").equalsIgnoreCase("block")) {
+            checkOGNLExpression();
         }
 
     }

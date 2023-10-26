@@ -15,7 +15,7 @@ import java.util.Base64;
 @Controller
 public class DeserializeController {
     @RequestMapping("/deserialize")
-    public void thread(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void deserialize(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             // 反序列化
             String base64 = request.getParameter("base64");
