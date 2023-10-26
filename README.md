@@ -23,7 +23,7 @@ why jvm-sandbox？
 pom.xml 报错是正常的，不影响打包
 
 ```
-mvn clean package
+mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 ```
 
 2. 下载 [jvm-sandbox 二进制包](https://github.com/alibaba/jvm-sandbox/releases)
@@ -74,7 +74,7 @@ cd sandbox/bin
 
 ## sql注入
 
-- [x] `com.mysql.cj.jdbc.StatementImpl` 类下 sql 执行语句拦截，没加语义词义分析
+- [x] `com.mysql.cj.jdbc.StatementImpl` 类下 sql 执行语句全拦截，没加语义词义分析
 
 ## 表达式注入
 
@@ -84,7 +84,17 @@ SPEL、OGNL
 
 ## JNI 注入
 
-- [x] hook 来自外部输入的 `java.lang.ClassLoader.loadLibrary0()`
+- [x] hook 来自外部输入的 `java.lang.ClassLoader.loadLibrary0()` 调用
 
-# 0x02 CVE漏洞检测 todo
+# 0x02 CVE漏洞检测
 
+CVE 漏洞分成两类
+
++ 一类是在基础漏洞上的触发比如 SPEL ，不需要额外 HOOK，因此在基础漏洞检测 Agent 上添加调用链的检查就能排查是否是 CVE 触发
++ 另一类就是框架本身的问题
+
+## 支持漏洞
+
+| 基本漏洞类型 | 组件             | CVE                          |
+| ------------ | ---------------- | ---------------------------- |
+| SPEL         | Spring-messaging | CVE-2018-1270, CVE-2018-1275 |

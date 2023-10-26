@@ -11,6 +11,7 @@ import com.ppprasp.agent.check.ExpressionChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
+import com.ppprasp.agent.common.RASPVulType;
 import com.ppprasp.agent.utils.Reflections;
 import org.kohsuke.MetaInfServices;
 
@@ -21,7 +22,7 @@ import java.util.Arrays;
  * @author Whoopsunix
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-expression-hook", author = "Whoopsunix", version = "1.0.0")
+@Information(id = "rasp-expression-hook", author = "Whoopsunix", version = "1.0.1")
 public class ExpressionHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
@@ -41,9 +42,15 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             String expression = (String) Reflections.getFieldValue(object, "expression");
                             RASPContext.Context context = RASPContext.getContext();
                             if (ExpressionChecker.isDangerousSPELExpression(expression) && context != null) {
-                                RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", "SPEL Expression", expression);
+                                String cve = RASPManager.showStackTracerWithCVECheck();
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo;
+                                if (cve != null) {
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s triggered by %s [!]", RASPVulType.SPEL, expression, cve);
+                                } else {
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", RASPVulType.SPEL, expression);
+                                }
+
                                 RASPManager.throwException(blockInfo);
                             }
                             super.before(advice);
@@ -83,8 +90,8 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             RASPContext.Context context = RASPContext.getContext();
                             if (ExpressionChecker.isDangerousSPELClass(clsName) && context != null) {
                                 RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", "SPEL Expression", clsName);
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", RASPVulType.SPEL, clsName);
                                 RASPManager.throwException(blockInfo);
                             }
 
@@ -113,8 +120,8 @@ public class ExpressionHook implements Module, ModuleLifecycle {
 
                             if (ExpressionChecker.isDangerousOGNLExpression(ognl) && context != null) {
                                 RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", "OGNL Expression", ognl);
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", RASPVulType.OGNL, ognl);
                                 RASPManager.throwException(blockInfo);
                             }
                             super.before(advice);
