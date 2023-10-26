@@ -19,6 +19,7 @@ public class RASPConfig {
         System.out.println(is);
     }
 
+
     /**
      * 是否要检查，规划三种模式
      * todo 目前只做 block
@@ -27,6 +28,7 @@ public class RASPConfig {
      * ignore: 不阻断不记录日志
      *
      * @param hookName
+     * @param algorithmName
      * @return
      */
     public static String isCheck(String hookName, String algorithmName) {

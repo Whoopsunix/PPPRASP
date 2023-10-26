@@ -5,6 +5,8 @@ import java.util.List;
 
 /**
  * @author Whoopsunix
+ *
+ * 获取调用栈
  */
 public class StackTracer {
     /**

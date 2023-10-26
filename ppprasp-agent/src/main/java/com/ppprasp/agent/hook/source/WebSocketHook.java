@@ -1,4 +1,4 @@
-package com.ppprasp.agent.hook;
+package com.ppprasp.agent.hook.source;
 
 import com.alibaba.jvm.sandbox.api.Information;
 import com.alibaba.jvm.sandbox.api.Module;
@@ -7,48 +7,45 @@ import com.alibaba.jvm.sandbox.api.listener.ext.Advice;
 import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
-import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
-import com.ppprasp.agent.common.RASPManager;
-import com.ppprasp.agent.common.RASPVulType;
+import com.ppprasp.agent.utils.InterfaceProxyUtils;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Whoopsunix
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-jni-hook", author = "Whoopsunix", version = "1.0.0")
-public class JNIHook implements Module, ModuleLifecycle {
-
+@Information(id = "rasp-websocket-hook", author = "Whoopsunix", version = "1.0.0")
+public class WebSocketHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-    public void checkStatement() {
+    public void getServletAccess() {
         try {
-            String className = "java.lang.ClassLoader";
-            String methodName = "loadLibrary0";
+            String className = "javax.websocket.MessageHandler";
+            String methodName = "onMessage";
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(Class.forName(className))
-                    .includeBootstrap()
+                    .includeSubClasses()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
-                            String filePath = advice.getParameterArray()[1].toString();
-                            // todo 针对路径进行更进一步的防护
-
-                            RASPContext.Context context = RASPContext.getContext();
-                            if (context != null) {
-                                RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, file path %s [!]", RASPVulType.JNI, filePath);
-                                RASPManager.throwException(blockInfo);
+                            // 只关心顶层调用
+                            if (!advice.isProcessTop()) {
+                                return;
                             }
+
+                            Object webSocketObject = advice.getParameterArray()[0];
+
+                            RASPContext.set(new RASPContext.Context(webSocketObject));
+
                             super.before(advice);
                         }
-
                     });
         } catch (Exception e) {
 
@@ -77,11 +74,6 @@ public class JNIHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        /**
-         * java.lang.ClassLoader.loadLibrary0()
-         */
-        if (RASPConfig.isCheck("rasp-jni-hook", "jni").equalsIgnoreCase("block")) {
-            checkStatement();
-        }
+        getServletAccess();
     }
 }

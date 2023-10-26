@@ -11,6 +11,7 @@ import com.ppprasp.agent.check.SqlChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
+import com.ppprasp.agent.common.RASPVulType;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
@@ -45,8 +46,8 @@ public class SqlHook implements Module, ModuleLifecycle {
                             String sql = (String) advice.getParameterArray()[0];
                             if (context != null && sql != null && SqlChecker.isDangerous(sql)) {
                                 RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s [!]", "Sql", sql);
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s [!]", RASPVulType.SQL, sql);
                                 RASPManager.throwException(blockInfo);
                             }
                             super.before(advice);

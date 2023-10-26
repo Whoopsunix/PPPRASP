@@ -10,6 +10,7 @@ import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
+import com.ppprasp.agent.common.RASPVulType;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
@@ -41,8 +42,8 @@ public class RceHook implements Module, ModuleLifecycle {
                             RASPContext.Context context = RASPContext.getContext();
                             if (context != null) {
                                 RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", "RCE", className, methodName);
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", RASPVulType.RCE, className, methodName);
                                 RASPManager.throwException(blockInfo);
                             }
                             super.before(advice);
@@ -72,8 +73,8 @@ public class RceHook implements Module, ModuleLifecycle {
                             RASPContext.Context context = RASPContext.getContext();
                             if (context != null) {
                                 RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", "RCE", className, methodName);
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", RASPVulType.RCE, className, methodName);
                                 RASPManager.throwException(blockInfo);
                             }
 

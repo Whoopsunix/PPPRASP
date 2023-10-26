@@ -35,9 +35,9 @@ hook:
       true
     algorithms:
       - id: spelExpression
-        action: log
-      - id: spelClass
         action: block
+      - id: spelClass
+        action: log
       - id: ognlExpression
         action: block
   - id:

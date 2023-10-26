@@ -11,6 +11,7 @@ import com.ppprasp.agent.check.DeserializeChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
+import com.ppprasp.agent.common.RASPVulType;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
@@ -46,8 +47,8 @@ public class DeserializeHook implements Module, ModuleLifecycle {
                             RASPContext.Context context = RASPContext.getContext();
                             if (DeserializeChecker.isDangerousClass(className) && context != null) {
                                 RASPManager.showStackTracer();
-                                RASPManager.changeResponse(context.getHttpBundle().getResponse());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", "Deserialize", className);
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", RASPVulType.DESERIALIZE, className);
                                 RASPManager.throwException(blockInfo);
                             }
 

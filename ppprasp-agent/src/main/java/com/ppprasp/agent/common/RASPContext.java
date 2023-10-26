@@ -32,9 +32,17 @@ public class RASPContext {
     public static class Context {
         private final long beginTimestamp = System.currentTimeMillis();
         private final HttpBundle httpBundle;
+        // websocket onMessage 捕获
+        private final Object websocketObject;
+
+        public Context(Object websocketObject) {
+            this.websocketObject = websocketObject;
+            this.httpBundle = null;
+        }
 
         public Context(HttpBundle httpBundle) {
             this.httpBundle = httpBundle;
+            this.websocketObject = null;
         }
 
         public long getBeginTimestamp() {
@@ -43,6 +51,10 @@ public class RASPContext {
 
         public HttpBundle getHttpBundle() {
             return httpBundle;
+        }
+
+        public Object getWebsocketObject() {
+            return websocketObject;
         }
     }
 }
