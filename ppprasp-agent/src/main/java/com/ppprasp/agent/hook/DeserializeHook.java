@@ -47,9 +47,15 @@ public class DeserializeHook implements Module, ModuleLifecycle {
 
                             RASPContext.Context context = RASPContext.getContext();
                             if (DeserializeChecker.isDangerousClass(className) && context != null) {
-                                RASPManager.showStackTracer();
+                                String cve = RASPManager.showStackTracerWithCVECheck();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", RASPVulType.DESERIALIZE, className);
+                                String blockInfo;
+                                if (cve != null) {
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s triggered by %s [!]", RASPVulType.SPEL, className, cve);
+                                } else {
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", RASPVulType.DESERIALIZE, className);
+                                }
+
                                 RASPManager.throwException(blockInfo);
                             }
 

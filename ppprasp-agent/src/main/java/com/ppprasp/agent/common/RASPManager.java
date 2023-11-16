@@ -31,7 +31,7 @@ public class RASPManager {
     }
 
     /**
-     * 单独提出来
+     * CVE 检测单独提出来
      *
      */
     public static String showStackTracerWithCVECheck() {
