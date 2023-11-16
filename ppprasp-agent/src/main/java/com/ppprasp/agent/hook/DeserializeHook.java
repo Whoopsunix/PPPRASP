@@ -36,6 +36,7 @@ public class DeserializeHook implements Module, ModuleLifecycle {
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(Class.forName(className))
                     .includeBootstrap()
+                    .includeSubClasses()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
                         @Override

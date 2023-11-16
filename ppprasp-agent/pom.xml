@@ -8,6 +8,7 @@
         <groupId>com.alibaba.jvm.sandbox</groupId>
         <artifactId>sandbox-module-starter</artifactId>
         <version>1.4.0</version>
+        <relativePath></relativePath>
     </parent>
 
     <groupId>com.ppprasp.agent</groupId>
