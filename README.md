@@ -65,18 +65,9 @@ cd sandbox/bin
 
 通过 [rasp.yml](ppprasp-agent/src/main/resources/rasp.yml) 配置文件来开启漏洞检测
 
-## 命令执行
-
-- [x] 参考 [jrasp](https://github.com/jvm-rasp/jrasp-agent) 实现了线程注入的拦截
-- [x] Jvm-sandbox 1.4.0 实现了 [native 方法的 hook](https://github.com/alibaba/jvm-sandbox/blob/c01c28ab5d7d97a64071a2aca261804c47a5347e/sandbox-core/src/main/java/com/alibaba/jvm/sandbox/core/enhance/weaver/asm/EventWeaver.java) ，因此支持拦截 `forkAndExec()`
-
 ## 反序列化
 
 - [x] 黑名单拦截，写了个 `com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl` 意思意思
-
-## sql注入
-
-- [x] `com.mysql.cj.jdbc.StatementImpl` 类下 sql 执行语句全拦截，没加语义词义分析
 
 ## 表达式注入
 
@@ -84,9 +75,22 @@ SPEL、OGNL
 
 - [x] 黑名单拦截
 
+## JNDI 注入
+
+- [x] hook 来自外部输入的 `javax.naming.Context.lookup()` 调用
+
 ## JNI 注入
 
 - [x] hook 来自外部输入的 `java.lang.ClassLoader.loadLibrary0()` 调用
+
+## 命令执行
+
+- [x] 参考 [jrasp](https://github.com/jvm-rasp/jrasp-agent) 实现了线程注入的拦截
+- [x] Jvm-sandbox 1.4.0 实现了 [native 方法的 hook](https://github.com/alibaba/jvm-sandbox/blob/c01c28ab5d7d97a64071a2aca261804c47a5347e/sandbox-core/src/main/java/com/alibaba/jvm/sandbox/core/enhance/weaver/asm/EventWeaver.java) ，因此支持拦截 `forkAndExec()`
+
+## SQL注入
+
+- [x] `com.mysql.cj.jdbc.StatementImpl` 类下 sql 执行语句全拦截，没加语义词义分析
 
 # 0x02 CVE漏洞检测
 
@@ -97,7 +101,10 @@ CVE 漏洞分成两类
 
 ## 支持漏洞
 
-| 基本漏洞类型 | 组件             | CVE                          |
-| ------------ | ---------------- | ---------------------------- |
-| SPEL         | Spring-messaging | CVE-2018-1270, CVE-2018-1275 |
-| Deserialize  | Apache Dubbo     | CVE-2019-17564               |
+反序列化漏洞需要准确识别到调用了相关黑名单函数才会拦截，目前没有针对此补全，所以实际 CVE 检测时可能上报其他漏洞检测类型。
+
+| 基本漏洞类型    | 组件             | CVE                          |
+| --------------- | ---------------- | ---------------------------- |
+| SPEL            | Spring-messaging | CVE-2018-1270, CVE-2018-1275 |
+| Deserialization | Apache Dubbo     | CVE-2019-17564               |
+| Deserialization | Apache Dubbo     | CVE-2020-1948                |

@@ -7,7 +7,6 @@ import com.alibaba.jvm.sandbox.api.listener.ext.Advice;
 import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
-import com.ppprasp.agent.check.DeserializationChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
@@ -15,24 +14,21 @@ import com.ppprasp.agent.common.RASPVulType;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
-import java.io.ObjectStreamClass;
 
 /**
  * @author Whoopsunix
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-deserialization-hook", author = "Whoopsunix", version = "1.1.0")
-public class DeserializationHook implements Module, ModuleLifecycle {
+@Information(id = "rasp-jndi-hook", author = "Whoopsunix", version = "1.0.0")
+public class JNDIHook implements Module, ModuleLifecycle {
+
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-    /**
-     * java.io.ObjectInputStream.resolveClass()
-     */
-    public void checkResolveClass() {
+    public void checkNaming() {
         try {
-            String className = "java.io.ObjectInputStream";
-            String methodName = "resolveClass";
+            String className = "javax.naming.Context";
+            String methodName = "lookup";
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(Class.forName(className))
                     .includeBootstrap()
@@ -41,19 +37,17 @@ public class DeserializationHook implements Module, ModuleLifecycle {
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
-                            ObjectStreamClass objectStreamClass = (ObjectStreamClass) advice.getParameterArray()[0];
-                            String classNameWithSerialVersionUID = objectStreamClass.toString();
-                            String className = objectStreamClass.getName();
+                            String url = (String) advice.getParameterArray()[0];
 
                             RASPContext.Context context = RASPContext.getContext();
-                            if (DeserializationChecker.isDangerousClass(className) && context != null) {
+                            if (context != null) {
                                 String cve = RASPManager.showStackTracerWithCVECheck();
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s triggered by %s [!]", RASPVulType.DESERIALIZATION, className, cve);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP %s, triggered by %s [!]", RASPVulType.JNDI, url, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", RASPVulType.DESERIALIZATION, className);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP %s [!]", url, RASPVulType.JNDI);
                                 }
 
                                 RASPManager.throwException(blockInfo);
@@ -90,8 +84,9 @@ public class DeserializationHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        if (RASPConfig.isCheck("rasp-deserialization-hook", "resolveClass").equalsIgnoreCase("block")) {
-            checkResolveClass();
+        if (RASPConfig.isCheck("rasp-jndi-hook", "naming").equalsIgnoreCase("block")) {
+            checkNaming();
         }
+
     }
 }

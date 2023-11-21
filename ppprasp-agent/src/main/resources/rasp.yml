@@ -1,34 +1,11 @@
 hook:
   - id:
-      # rce
-      rasp-rce-hook
-    enable:
-      # 是否启用该检测 true false
-      true
-    algorithms:
-      - id: normal
-        # block 拦截
-        # todo log 记录  ignore 忽略
-        action: block
-      - id: native
-        action: block
-
-  - id:
       # 反序列化
       rasp-deserialization-hook
     enable:
       true
     algorithms:
       - id: resolveClass
-        action: block
-
-  - id:
-      # sql注入
-      rasp-sql-hook
-    enable:
-      true
-    algorithms:
-      - id: mysql
         action: block
 
   - id:
@@ -45,6 +22,15 @@ hook:
         action: block
 
   - id:
+      # jndi注入
+      rasp-jndi-hook
+    enable:
+      true
+    algorithms:
+      - id: naming
+        action: block
+
+  - id:
       # jni注入
       rasp-jni-hook
     enable:
@@ -53,4 +39,25 @@ hook:
       - id: jni
         action: block
 
+  - id:
+      # rce
+      rasp-rce-hook
+    enable:
+      # 是否启用该检测 true false
+      true
+    algorithms:
+      - id: normal
+        # block 拦截
+        # todo log 记录  ignore 忽略
+        action: block
+      - id: native
+        action: block
 
+  - id:
+      # sql注入
+      rasp-sql-hook
+    enable:
+      true
+    algorithms:
+      - id: mysql
+        action: block

@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @author Whoopsunix
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-rce-hook", author = "Whoopsunix", version = "1.0.0")
+@Information(id = "rasp-rce-hook", author = "Whoopsunix", version = "1.1.0")
 public class RceHook implements Module, ModuleLifecycle {
 
     @Resource
@@ -78,9 +78,14 @@ public class RceHook implements Module, ModuleLifecycle {
                         protected void before(Advice advice) throws Throwable {
                             RASPContext.Context context = RASPContext.getContext();
                             if (context != null) {
-                                RASPManager.showStackTracer();
+                                String cve = RASPManager.showStackTracerWithCVECheck();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", RASPVulType.RCE, className, methodName);
+                                String blockInfo;
+                                if (cve != null) {
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() triggered by %s [!]", RASPVulType.RCE, className, methodName, cve);
+                                } else {
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", RASPVulType.RCE, className, methodName);
+                                }
                                 RASPManager.throwException(blockInfo);
                             }
 
