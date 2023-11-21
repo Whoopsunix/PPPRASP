@@ -11,5 +11,5 @@ public class RASPVulType {
     public static String RCE = "RCE";
     public static String JNI = "JNI file load";
     public static String SQL = "SQL Inject";
-    public static String DESERIALIZE = "Deserialize";
+    public static String DESERIALIZE = "Deserialization";
 }

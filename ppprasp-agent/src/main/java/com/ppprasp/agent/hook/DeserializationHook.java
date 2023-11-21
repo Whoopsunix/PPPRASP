@@ -7,7 +7,7 @@ import com.alibaba.jvm.sandbox.api.listener.ext.Advice;
 import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
-import com.ppprasp.agent.check.DeserializeChecker;
+import com.ppprasp.agent.check.DeserializationChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
@@ -21,8 +21,8 @@ import java.io.ObjectStreamClass;
  * @author Whoopsunix
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-deserialize-hook", author = "Whoopsunix", version = "1.0.0")
-public class DeserializeHook implements Module, ModuleLifecycle {
+@Information(id = "rasp-deserialization-hook", author = "Whoopsunix", version = "1.0.0")
+public class DeserializationHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
@@ -46,7 +46,7 @@ public class DeserializeHook implements Module, ModuleLifecycle {
                             String className = objectStreamClass.getName();
 
                             RASPContext.Context context = RASPContext.getContext();
-                            if (DeserializeChecker.isDangerousClass(className) && context != null) {
+                            if (DeserializationChecker.isDangerousClass(className) && context != null) {
                                 String cve = RASPManager.showStackTracerWithCVECheck();
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
@@ -90,7 +90,7 @@ public class DeserializeHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        if (RASPConfig.isCheck("rasp-deserialize-hook", "resolveClass").equalsIgnoreCase("block")) {
+        if (RASPConfig.isCheck("rasp-deserialization-hook", "resolveClass").equalsIgnoreCase("block")) {
             checkResolveClass();
         }
     }

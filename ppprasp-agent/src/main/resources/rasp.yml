@@ -12,14 +12,16 @@ hook:
         action: block
       - id: native
         action: block
+
   - id:
       # 反序列化
-      rasp-deserialize-hook
+      rasp-deserialization-hook
     enable:
       true
     algorithms:
       - id: resolveClass
         action: block
+
   - id:
       # sql注入
       rasp-sql-hook
@@ -28,6 +30,7 @@ hook:
     algorithms:
       - id: mysql
         action: block
+
   - id:
       # 表达式注入
       rasp-expression-hook
@@ -40,6 +43,7 @@ hook:
         action: log
       - id: ognlExpression
         action: block
+
   - id:
       # jni注入
       rasp-jni-hook
