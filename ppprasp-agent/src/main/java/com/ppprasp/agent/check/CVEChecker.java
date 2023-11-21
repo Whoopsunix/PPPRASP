@@ -15,9 +15,10 @@ public class CVEChecker {
         put("org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry", "spring-messaging CVE-2018-1270, CVE-2018-1275");
 
         /**
-         * Deserialize
+         * Deserialization
          */
         put("org.apache.dubbo.rpc.protocol.http.HttpProtocol$InternalHandler", "Apache Dubbo CVE-2019-17564");
+        put("com.alibaba.com.caucho.hessian.io.Hessian2Input", "Apache Dubbo CVE-2020-1948");
     }};
 
     /**
