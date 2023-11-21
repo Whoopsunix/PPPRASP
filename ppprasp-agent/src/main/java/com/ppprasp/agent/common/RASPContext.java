@@ -8,10 +8,10 @@ import com.ppprasp.agent.hook.source.HttpBundle;
  */
 public class RASPContext {
     public static InheritableThreadLocal<Context> RASP_ThreadLocal = new InheritableThreadLocal<Context>() {
-        @Override
-        protected Context initialValue() {
-            return null;
-        }
+//        @Override
+//        protected Context initialValue() {
+//            return null;
+//        }
     };
 
     public static Context getContext() {
@@ -28,21 +28,40 @@ public class RASPContext {
 
     /**
      * 请求对象
+     * 用于识别是否是来自请求的调用
      */
     public static class Context {
-        private final long beginTimestamp = System.currentTimeMillis();
-        private final HttpBundle httpBundle;
+        private long beginTimestamp = System.currentTimeMillis();
+        // http service
+        private HttpBundle httpBundle = null;
         // websocket onMessage 捕获
-        private final Object websocketObject;
+        private Object websocketObject = null;
+        // dubbo received
+        private Object dubboRequest = null;
 
-        public Context(Object websocketObject) {
-            this.websocketObject = websocketObject;
-            this.httpBundle = null;
+        public Context() {
         }
 
-        public Context(HttpBundle httpBundle) {
+        public Context(HttpBundle httpBundle, Object websocketObject, Object dubboRequest) {
             this.httpBundle = httpBundle;
-            this.websocketObject = null;
+            this.websocketObject = websocketObject;
+            this.dubboRequest = dubboRequest;
+        }
+
+        public void setBeginTimestamp(long beginTimestamp) {
+            this.beginTimestamp = beginTimestamp;
+        }
+
+        public void setHttpBundle(HttpBundle httpBundle) {
+            this.httpBundle = httpBundle;
+        }
+
+        public void setWebsocketObject(Object websocketObject) {
+            this.websocketObject = websocketObject;
+        }
+
+        public void setDubboRequest(Object dubboRequest) {
+            this.dubboRequest = dubboRequest;
         }
 
         public long getBeginTimestamp() {
@@ -55,6 +74,10 @@ public class RASPContext {
 
         public Object getWebsocketObject() {
             return websocketObject;
+        }
+
+        public Object getDubboRequest() {
+            return dubboRequest;
         }
     }
 }

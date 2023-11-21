@@ -8,26 +8,23 @@ import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.common.RASPContext;
-import com.ppprasp.agent.utils.InterfaceProxyUtils;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Whoopsunix
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-websocket-hook", author = "Whoopsunix", version = "1.0.0")
-public class WebSocketHook implements Module, ModuleLifecycle {
+@Information(id = "rasp-dubbo-hook", author = "Whoopsunix", version = "1.0.0")
+public class DubboHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
     public void getServletAccess() {
         try {
-            String className = "javax.websocket.MessageHandler";
-            String methodName = "onMessage";
+            String className = "org.apache.dubbo.remoting.ChannelHandler";
+            String methodName = "received";
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(Class.forName(className))
                     .includeSubClasses()
@@ -40,10 +37,10 @@ public class WebSocketHook implements Module, ModuleLifecycle {
                                 return;
                             }
 
-                            Object webSocketObject = advice.getParameterArray()[0];
+                            Object request = advice.getParameterArray()[1];
 
                             RASPContext.Context context = new RASPContext.Context();
-                            context.setWebsocketObject(webSocketObject);
+                            context.setDubboRequest(request);
                             RASPContext.set(context);
 
                             super.before(advice);

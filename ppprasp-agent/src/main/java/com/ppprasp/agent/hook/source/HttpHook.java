@@ -51,7 +51,9 @@ public class HttpHook implements Module, ModuleLifecycle {
 
                             HttpBundle httpBundle = wrapperHttpBundle(advice);
 
-                            RASPContext.set(new RASPContext.Context(httpBundle));
+                            RASPContext.Context context = new RASPContext.Context();
+                            context.setHttpBundle(httpBundle);
+                            RASPContext.set(context);
 
                             super.before(advice);
                         }
