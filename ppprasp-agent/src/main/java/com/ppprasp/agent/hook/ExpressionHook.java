@@ -20,6 +20,8 @@ import java.util.Arrays;
 
 /**
  * @author Whoopsunix
+ *
+ * 表达式注入
  */
 @MetaInfServices(Module.class)
 @Information(id = "rasp-expression-hook", author = "Whoopsunix", version = "1.0.1")

@@ -18,6 +18,8 @@ import javax.annotation.Resource;
 
 /**
  * @author Whoopsunix
+ *
+ * SQL 注入
  */
 @MetaInfServices(Module.class)
 @Information(id = "rasp-sql-hook", author = "Whoopsunix", version = "1.0.0")

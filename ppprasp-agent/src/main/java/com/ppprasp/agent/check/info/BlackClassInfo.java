@@ -1,10 +1,11 @@
-package com.ppprasp.agent.check;
+package com.ppprasp.agent.check.info;
 
 import java.util.HashMap;
 
 /**
  * @author Whoopsunix
- *  黑名单统一维护类
+ *
+ * 黑名单统一维护
  */
 public class BlackClassInfo {
     /**

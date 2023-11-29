@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 
 /**
  * @author Whoopsunix
+ *
+ * Dubbo 请求
  */
 @MetaInfServices(Module.class)
 @Information(id = "rasp-dubbo-hook", author = "Whoopsunix", version = "1.0.0")

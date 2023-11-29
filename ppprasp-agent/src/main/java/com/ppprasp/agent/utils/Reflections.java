@@ -7,7 +7,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-@SuppressWarnings("restriction")
+/**
+ * 反射工具类
+ */
 public class Reflections {
 
     public static void setAccessible(AccessibleObject member) {

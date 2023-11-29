@@ -1,7 +1,11 @@
 package com.ppprasp.agent.check;
 
+import com.ppprasp.agent.check.info.BlackClassInfo;
+
 /**
  * @author Whoopsunix
+ *
+ * 表达式检测
  */
 public class ExpressionChecker {
 

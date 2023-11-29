@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Whoopsunix
+ *
+ * web sokcet 请求
  */
 @MetaInfServices(Module.class)
 @Information(id = "rasp-websocket-hook", author = "Whoopsunix", version = "1.0.0")

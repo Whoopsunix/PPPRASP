@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * @author Whoopsunix
  *
- * CVE 检测
+ * CVE 黑名单检测
  */
 public class CVEChecker {
     public static HashMap<String, String> cveStackTracer = new HashMap<String, String>() {{

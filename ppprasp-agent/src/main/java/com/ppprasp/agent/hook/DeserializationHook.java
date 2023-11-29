@@ -19,6 +19,8 @@ import java.io.ObjectStreamClass;
 
 /**
  * @author Whoopsunix
+ *
+ * 反序列化
  */
 @MetaInfServices(Module.class)
 @Information(id = "rasp-deserialization-hook", author = "Whoopsunix", version = "1.1.0")

@@ -17,6 +17,8 @@ import javax.annotation.Resource;
 
 /**
  * @author Whoopsunix
+ *
+ * JNI 注入
  */
 @MetaInfServices(Module.class)
 @Information(id = "rasp-jni-hook", author = "Whoopsunix", version = "1.0.0")

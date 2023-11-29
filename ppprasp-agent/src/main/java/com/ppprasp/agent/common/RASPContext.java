@@ -1,9 +1,11 @@
 package com.ppprasp.agent.common;
 
-import com.ppprasp.agent.hook.source.HttpBundle;
+import com.ppprasp.agent.hook.source.bundle.HttpBundle;
 
 /**
  * @author Whoopsunix
+ *
+ * 检测当前调用是否来自请求
  * 参考 https://www.jrasp.com/algorithm/thread/thread_inject.html 中给的线程增强逻辑
  */
 public class RASPContext {
@@ -27,8 +29,7 @@ public class RASPContext {
     }
 
     /**
-     * 请求对象
-     * 用于识别是否是来自请求的调用
+     * 请求对象封装
      */
     public static class Context {
         private long beginTimestamp = System.currentTimeMillis();

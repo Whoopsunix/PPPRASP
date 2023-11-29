@@ -8,6 +8,7 @@ import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.common.RASPContext;
+import com.ppprasp.agent.hook.source.bundle.HttpBundle;
 import com.ppprasp.agent.utils.InterfaceProxyUtils;
 import org.kohsuke.MetaInfServices;
 
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Whoopsunix
+ *
+ * http Servlet 请求
  */
 @MetaInfServices(Module.class)
 @Information(id = "rasp-http-hook", author = "Whoopsunix", version = "1.0.0")

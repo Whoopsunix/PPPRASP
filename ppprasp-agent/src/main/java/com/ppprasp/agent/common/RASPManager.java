@@ -2,7 +2,7 @@ package com.ppprasp.agent.common;
 
 import com.alibaba.jvm.sandbox.api.ProcessController;
 import com.ppprasp.agent.check.CVEChecker;
-import com.ppprasp.agent.hook.source.HttpBundle;
+import com.ppprasp.agent.hook.source.bundle.HttpBundle;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -10,8 +10,9 @@ import java.util.List;
 
 /**
  * @author Whoopsunix
- * <p>
+ *
  * RASP 控制代码
+ *  涉及：栈、JVM 操作、输出
  */
 public class RASPManager {
     /**
@@ -80,7 +81,7 @@ public class RASPManager {
         // 打印
         System.out.println(blockInfo);
 
-        // 记录日志
+        // todo 记录日志
 
         ProcessController.throwsImmediately(new Exception(blockInfo));
     }
