@@ -13,7 +13,8 @@ public enum VulInfo {
     JNDI("JNDI Injection"),
     RCE("RCE"),
     SQL("SQL Injection"),
-    FILEREAD("File Read");
+    FileUpload("File Upload"),
+    FileRead("File Read");
 
     private final String description;
 

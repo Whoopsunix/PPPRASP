@@ -40,9 +40,14 @@ public enum Algorithm {
     SQL_MYSQL("rasp-sql", "mysql"),
 
     /**
+     * 文件上传
+     */
+    File_Upload("rasp-file-upload", "tomcat"),
+
+    /**
      * 文件读取
      */
-    FILE_READ("rasp-file-read", "read"),
+    File_READ("rasp-file-read", "read"),
 
     ;
 

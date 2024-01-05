@@ -129,6 +129,14 @@ cd sandbox/bin
 | ------------------------------------------ | ---------------- | ---- |
 | com.mysql.cj.jdbc.StatementImpl 类查询语句 | /sql/mysql/case1 |      |
 
+## 文件上传
+
+- [x] 提取出文件名和文件内容
+
+| Hook 点                                                 | REST API                              | 备注 |
+| ------------------------------------------------------- | ------------------------------------- | ---- |
+| org.apache.tomcat.util.http.fileupload.FileItem.write() | /file/upload/case2 /file/upload/case4 |      |
+
 # 0x02 CVE漏洞触发检测
 
 CVE 漏洞分成两类

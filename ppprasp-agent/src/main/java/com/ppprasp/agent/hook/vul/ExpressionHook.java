@@ -52,6 +52,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             // 获取 hook 的对象
                             Object object = advice.getTarget();
                             String expression = (String) Reflections.getFieldValue(object, "expression");
+
                             RASPContext.Context context = RASPContext.getContext();
                             if (ExpressionChecker.isDangerousSPELExpression(expression) && context != null) {
                                 String cve = RASPManager.showStackTracerWithCVECheck();
