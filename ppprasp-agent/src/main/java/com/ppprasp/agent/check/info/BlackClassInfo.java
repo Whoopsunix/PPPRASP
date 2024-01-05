@@ -20,6 +20,7 @@ public class BlackClassInfo {
      */
     public static HashMap<String, Object> dangerousBlackClassMap = new HashMap<String, Object>() {{
         put("java.lang.Runtime", null);
+        put("java.lang.ProcessBuilder", null);
     }};
 
 

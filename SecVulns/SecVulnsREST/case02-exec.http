@@ -1,0 +1,60 @@
+###
+# case1 runtime
+POST /exec/case1 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: application/x-www-form-urlencoded
+
+str=ifconfig
+
+
+###
+# case2 thread
+POST /exec/case2 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: application/x-www-form-urlencoded
+
+str=ifconfig
+
+
+###
+# case3 processImpl
+POST /exec/case3 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: application/x-www-form-urlencoded
+
+str=ifconfig
+
+
+###
+# case4 processBuilder
+POST /exec/case4 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: application/x-www-form-urlencoded
+
+str=ifconfig
+
+
+###
+# case5 processImplUnixProcess
+POST /exec/case5 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: application/x-www-form-urlencoded
+
+str=ifconfig
+
+
+###
+# case6 processImplUnixProcessByUnsafeNative
+POST /exec/case6 HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: application/x-www-form-urlencoded
+
+str=ifconfig
+
+
+
+
+
+
+
+

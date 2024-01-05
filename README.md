@@ -2,19 +2,25 @@
 
 By. Whoopsunix
 
-发现 [jvm-sandbox](https://github.com/alibaba/jvm-sandbox) 从 1.4.0 开始实现了 Native 的增强，正好P写一个简单的 RASP Demo 来熟悉这个 AOP 框架（~~其实是懒得用 ASM~~）
+## why jvm-sandbox？
 
-RASP 真的很适合用来学 Java，复现分析+防护的漏洞学习模式会加深漏洞的理解能力
-
-why jvm-sandbox？
+发现 [jvm-sandbox](https://github.com/alibaba/jvm-sandbox) 从 1.4.0 开始支持 Native 的增强，正好写一个简单的 RASP Demo 来熟悉这个 AOP 框架（~~其实是懒得用从头用 ASM 写~~）。
 
 + AOP 框架、沙箱类隔离等架构优点，很难拒绝
 + 基层基于 ASM 实现，框架比较熟悉，后续有更复杂的需求时可以改源码方便
 + 虽然没有一个很详细的文档，不过好在源代码注释非常多，并且给出了 [Module 编写例子](https://github.com/oldmanpushcart/sandbox-module-example/blob/master/README.md)，在 [sandbox-debug-module](https://github.com/alibaba/jvm-sandbox/blob/1.4.0/sandbox-debug-module) 中提供了很多工具类代码
 
-🚩 同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 项目实现基础漏洞的 HOOK，同步 [PPPVULNS](https://github.com/Whoopsunix/PPPVULNS) 项目实现部分 CVE 触发的识别
+RASP 真的很适合用来学 Java，复现、分析、防护，连贯性的学习会加深对 Java 的理解。
 
-⭐️ 只会拦截来自 http 请求的 HOOK 点触发，可以使用项目配套测试环境进行测试 [vulEnv](vulEnv)，配套 [postman api 文件](vulEnv/vulEnv.postman_collection.json)
+## 关于项目
+
+🚩 陆续同步 [JavaRce](https://github.com/Whoopsunix/JavaRce) 项目实现基础漏洞的 HOOK，已实现的 CVE 触发检测可从 [PPPVULNS](https://github.com/Whoopsunix/PPPVULNS) 项目获取靶场
+
+⭐️ 只有来自外部的请求才会进入 HOOK 点检测
+
++ 可以使用项目配套测试环境 [SecVulns](SecVulns) 进行测试
++ [vulnsCore](SecVulns/vulnsCore) 为漏洞代码，不同的组件引入后可以直接运行
++ [SecVulnsREST](SecVulns/SecVulnsREST) 为 Rest Client 文件可直接发送
 
 ---------------
 
@@ -61,43 +67,70 @@ cd sandbox/bin
 
 这部分内容没有文档可以参考 [sandbox-mgr-module](https://github.com/alibaba/jvm-sandbox/blob/c01c28ab5d7d97a64071a2aca261804c47a5347e/sandbox-mgr-module/src/main/java/com/alibaba/jvm/sandbox/module/mgr/ModuleMgrModule.java) 来自行构建
 
-# 0x01 基本漏洞检测类型 ing
+# 0x01 基本漏洞检测类型
 
-通过 [rasp.yml](ppprasp-agent/src/main/resources/rasp.yml) 配置文件来开启漏洞检测
+暂时通过 [rasp.yml](ppprasp-agent/src/main/resources/rasp.yml) 配置文件来配置漏洞检测
 
 ## 反序列化
 
-- [x] 黑名单拦截，写了个 `com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl` 意思意思
+- [x] 接入黑名单
+
+| Hook 点                                  | REST API               | 备注 |
+| ---------------------------------------- | ---------------------- | ---- |
+| java.io.ObjectInputStream#resolveClass() | /deserialization/case1 |      |
 
 ## 表达式注入
 
-SPEL、OGNL
+- [x] 接入黑名单
 
-- [x] 黑名单拦截
+| Hook 点                                                      | REST API    | 备注 |
+| ------------------------------------------------------------ | ----------- | ---- |
+| org.springframework.expression.spel.standard.SpelExpression#getValue() | /spel/case1 |      |
+| 同 case1 使用 StandardEvaluationContext                      | /spel/case2 |      |
+| 同 case1 使用 MethodBasedEvaluationContext                   | /spel/case3 |      |
+| ognl.Ognl#getValue()                                         | /ognl/case1 |      |
+| ognl.Ognl#setValue()                                         | /ognl/case2 |      |
 
 ## JNDI 注入
 
-- [x] hook 来自外部输入的 `javax.naming.Context.lookup()` 调用
+| Hook 点                       | REST API    | 备注 |
+| ----------------------------- | ----------- | ---- |
+| javax.naming.Context#lookup() | /jndi/case1 |      |
 
 ## JNI 注入
 
-- [x] hook 来自外部输入的 `java.lang.ClassLoader.loadLibrary0()` 调用
+| Hook 点                 | REST API   | 备注 |
+| ----------------------- | ---------- | ---- |
+| java.lang.System#load() | /jni/case1 |      |
 
 ## 命令执行
 
 - [x] 参考 [jrasp](https://github.com/jvm-rasp/jrasp-agent) 实现了线程注入的拦截
 - [x] Jvm-sandbox 1.4.0 实现了 [native 方法的 hook](https://github.com/alibaba/jvm-sandbox/blob/c01c28ab5d7d97a64071a2aca261804c47a5347e/sandbox-core/src/main/java/com/alibaba/jvm/sandbox/core/enhance/weaver/asm/EventWeaver.java) ，因此支持拦截 `forkAndExec()`
 
+| Hook 点                             | REST API    | 备注                                 |
+| ----------------------------------- | ----------- | ------------------------------------ |
+| java.lang.ProcessBuilder.start()    | /exec/case1 | Runtime                              |
+| java.lang.ProcessBuilder.start()    | /exec/case4 | processBuilder                       |
+| 线程注入                            | /exec/case2 | 参考 jrasp 实现                      |
+| java.lang.UNIXProcess.forkAndExec() | /exec/case3 | processImpl                          |
+| java.lang.UNIXProcess.forkAndExec() | /exec/case5 | processImplUnixProcess               |
+| java.lang.UNIXProcess.forkAndExec() | /exec/case6 | processImplUnixProcessByUnsafeNative |
+
 ## SQL注入
 
-- [x] `com.mysql.cj.jdbc.StatementImpl` 类下 sql 执行语句全拦截，没加语义词义分析
+- [ ] 没有语义词义分析
 
-# 0x02 CVE漏洞检测
+| Hook 点                                    | REST API         | 备注 |
+| ------------------------------------------ | ---------------- | ---- |
+| com.mysql.cj.jdbc.StatementImpl 类查询语句 | /sql/mysql/case1 |      |
+
+# 0x02 CVE漏洞触发检测
 
 CVE 漏洞分成两类
 
-+ 一类是在基础漏洞上的触发比如 SPEL ，不需要额外 HOOK，调用栈遍历时添加一个类匹配就能检查是否由 CVE 触发，所以分析过的漏洞就顺便加上了
-+ 另一类就是框架本身的问题，这部分需要额外工作量暂时就不考虑引入了
++ 一类是在基础漏洞上的触发比如 SPEL ，不需要额外 HOOK，遍历调用栈匹配漏洞触发类就能确定是否由 CVE 触发，所以之后分析漏洞时都会添加
++ 另一类就是框架本身的问题，比如权限绕过这种不好直接归类到具体的漏洞类别中，目前暂时不处理
 
 ## 支持漏洞
 
