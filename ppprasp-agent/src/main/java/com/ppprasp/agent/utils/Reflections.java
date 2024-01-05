@@ -2,19 +2,12 @@ package com.ppprasp.agent.utils;
 
 import sun.reflect.ReflectionFactory;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 
-/**
- * 反射工具类
- */
+@SuppressWarnings("restriction")
 public class Reflections {
 
     public static void setAccessible(AccessibleObject member) {
-        String versionStr = System.getProperty("java.version");
-        int javaVersion = Integer.parseInt(versionStr.split("\\.")[0]);
         member.setAccessible(true);
     }
 
@@ -22,7 +15,7 @@ public class Reflections {
         Field field = null;
         try {
             field = clazz.getDeclaredField(fieldName);
-            setAccessible(field);
+            field.setAccessible(true);
         } catch (NoSuchFieldException ex) {
             if (clazz.getSuperclass() != null)
                 field = getField(clazz.getSuperclass(), fieldName);
@@ -41,15 +34,15 @@ public class Reflections {
     }
 
     public static Constructor<?> getFirstCtor(final String name) throws Exception {
-        final Constructor<?> ctor = Class.forName(name).getDeclaredConstructors()[0];
-        setAccessible(ctor);
-        return ctor;
+        final Constructor<?> constructor = Class.forName(name).getDeclaredConstructors()[0];
+        constructor.setAccessible(true);
+        return constructor;
     }
 
     public static Constructor<?> getFirstCtor(Class clazz) throws Exception {
-        final Constructor<?> ctor = clazz.getDeclaredConstructors()[0];
-        setAccessible(ctor);
-        return ctor;
+        final Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
+        constructor.setAccessible(true);
+        return constructor;
     }
 
     public static Object newInstance(String className, Object... args) throws Exception {
@@ -65,10 +58,48 @@ public class Reflections {
     public static <T> T createWithConstructor(Class<T> classToInstantiate, Class<? super T> constructorClass, Class<?>[] consArgTypes, Object[] consArgs)
             throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Constructor<? super T> objCons = constructorClass.getDeclaredConstructor(consArgTypes);
-        setAccessible(objCons);
+        objCons.setAccessible(true);
         Constructor<?> sc = ReflectionFactory.getReflectionFactory().newConstructorForSerialization(classToInstantiate, objCons);
-        setAccessible(sc);
+        sc.setAccessible(true);
         return (T) sc.newInstance(consArgs);
+    }
+
+    public static Object invokeMethod(Object obj, String methodName, Class[] argsClass, Object[] args) throws Exception {
+        Method method;
+        try {
+            method = obj.getClass().getDeclaredMethod(methodName, argsClass);
+        } catch (NoSuchMethodException e) {
+            method = obj.getClass().getSuperclass().getDeclaredMethod(methodName, argsClass);
+        }
+        method.setAccessible(true);
+        Object object = method.invoke(obj, args);
+        return object;
+    }
+
+    public static Object invokeMethod(Object obj, String methodName, Object... args) throws Exception {
+        Class<?>[] argsClass = new Class[args.length];
+        for (int i = 0; i < args.length; i++) {
+            argsClass[i] = args[i].getClass();
+            if (argsClass[i].equals(Integer.class))
+                argsClass[i] = Integer.TYPE;
+            else if (argsClass[i].equals(Boolean.class))
+                argsClass[i] = Boolean.TYPE;
+            else if (argsClass[i].equals(Byte.class))
+                argsClass[i] = Byte.TYPE;
+            else if (argsClass[i].equals(Long.class))
+                argsClass[i] = Long.TYPE;
+            else if (argsClass[i].equals(Double.class))
+                argsClass[i] = Double.TYPE;
+            else if (argsClass[i].equals(Float.class))
+                argsClass[i] = Float.TYPE;
+            else if (argsClass[i].equals(Character.class))
+                argsClass[i] = Character.TYPE;
+            else if (argsClass[i].equals(Short.class))
+                argsClass[i] = Short.TYPE;
+        }
+        Method method = obj.getClass().getDeclaredMethod(methodName, argsClass);
+        Object o = method.invoke(obj, args);
+        return o;
     }
 
 }

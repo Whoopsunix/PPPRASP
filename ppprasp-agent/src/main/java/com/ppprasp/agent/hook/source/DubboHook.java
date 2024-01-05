@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * Dubbo 请求
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-dubbo-hook", author = "Whoopsunix", version = "1.0.0")
+@Information(id = "rasp-dubbo", author = "Whoopsunix", version = "1.0.0")
 public class DubboHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
@@ -28,7 +28,7 @@ public class DubboHook implements Module, ModuleLifecycle {
             String className = "org.apache.dubbo.remoting.ChannelHandler";
             String methodName = "received";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeSubClasses()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {

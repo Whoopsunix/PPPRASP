@@ -1,6 +1,6 @@
 package com.ppprasp.agent.check.info;
 
-import com.ppprasp.agent.common.RASPVulType;
+import com.ppprasp.agent.common.enums.Algorithm;
 
 import java.util.HashMap;
 
@@ -17,7 +17,7 @@ public class WhiteClassInfo {
      */
     public static HashMap<String, Object> sinkBlackClassMap = new HashMap<String, Object>() {{
         // Tomcat jsp 页面首次访问时编译成 Java 类 FileInputStream
-        put("org.apache.jasper.JspCompilationContext", RASPVulType.FILEREAD);
+        put("org.apache.jasper.JspCompilationContext", Algorithm.FILE_READ);
     }};
 
 

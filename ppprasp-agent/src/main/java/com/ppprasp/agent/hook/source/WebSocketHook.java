@@ -8,12 +8,9 @@ import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.common.RASPContext;
-import com.ppprasp.agent.utils.InterfaceProxyUtils;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Whoopsunix
@@ -21,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * web sokcet 请求
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-websocket-hook", author = "Whoopsunix", version = "1.0.0")
+@Information(id = "rasp-websocket", author = "Whoopsunix", version = "1.0.0")
 public class WebSocketHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
@@ -31,7 +28,7 @@ public class WebSocketHook implements Module, ModuleLifecycle {
             String className = "javax.websocket.MessageHandler";
             String methodName = "onMessage";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeSubClasses()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {

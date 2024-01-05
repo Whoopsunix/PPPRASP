@@ -1,4 +1,4 @@
-package com.ppprasp.agent.hook;
+package com.ppprasp.agent.hook.vul;
 
 import com.alibaba.jvm.sandbox.api.Information;
 import com.alibaba.jvm.sandbox.api.Module;
@@ -11,7 +11,9 @@ import com.ppprasp.agent.check.DeserializationChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
-import com.ppprasp.agent.common.RASPVulType;
+import com.ppprasp.agent.common.enums.Algorithm;
+import com.ppprasp.agent.common.enums.Status;
+import com.ppprasp.agent.common.enums.VulInfo;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
@@ -23,7 +25,7 @@ import java.io.ObjectStreamClass;
  * 反序列化
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-deserialization-hook", author = "Whoopsunix", version = "1.1.0")
+@Information(id = "rasp-deserialization", author = "Whoopsunix", version = "1.1.0")
 public class DeserializationHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
@@ -32,11 +34,15 @@ public class DeserializationHook implements Module, ModuleLifecycle {
      * java.io.ObjectInputStream.resolveClass()
      */
     public void checkResolveClass() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.Deserialization.getAlgoId(), Algorithm.Deserialization.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
+
         try {
             String className = "java.io.ObjectInputStream";
             String methodName = "resolveClass";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeBootstrap()
                     .includeSubClasses()
                     .onBehavior(methodName)
@@ -53,12 +59,12 @@ public class DeserializationHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s triggered by %s [!]", RASPVulType.DESERIALIZATION, className, cve);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s triggered by %s [!]", VulInfo.DESERIALIZATION.getDescription(), className, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", RASPVulType.DESERIALIZATION, className);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", VulInfo.DESERIALIZATION.getDescription(), className);
                                 }
 
-                                RASPManager.throwException(blockInfo);
+                                RASPManager.scheduler(status, blockInfo);
                             }
 
                             super.before(advice);
@@ -92,8 +98,6 @@ public class DeserializationHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        if (RASPConfig.isCheck("rasp-deserialization-hook", "resolveClass").equalsIgnoreCase("block")) {
-            checkResolveClass();
-        }
+        checkResolveClass();
     }
 }

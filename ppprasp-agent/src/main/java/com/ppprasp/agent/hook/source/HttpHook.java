@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * http Servlet 请求
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-http-hook", author = "Whoopsunix", version = "1.0.0")
+@Information(id = "rasp-http", author = "Whoopsunix", version = "1.0.0")
 public class HttpHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
@@ -40,7 +40,7 @@ public class HttpHook implements Module, ModuleLifecycle {
             String className = "javax.servlet.http.HttpServlet";
             String methodName = "service";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeSubClasses()
                     .onBehavior(methodName)
                     .withParameterTypes("javax.servlet.http.HttpServletRequest", "javax.servlet.http.HttpServletResponse")

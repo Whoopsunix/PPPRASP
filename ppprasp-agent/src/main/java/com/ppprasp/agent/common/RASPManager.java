@@ -2,6 +2,7 @@ package com.ppprasp.agent.common;
 
 import com.alibaba.jvm.sandbox.api.ProcessController;
 import com.ppprasp.agent.check.CVEChecker;
+import com.ppprasp.agent.common.enums.Status;
 import com.ppprasp.agent.hook.source.bundle.HttpBundle;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,42 @@ import java.util.List;
  *  涉及：栈、JVM 操作、输出
  */
 public class RASPManager {
+
+    public static void scheduler(Status status, String blockInfo) throws Throwable {
+        if (status == Status.LOG) {
+            RASPManager.log(blockInfo);
+        } else {
+            RASPManager.throwException(blockInfo);
+        }
+    }
+
+
+    /**
+     * 执行拦截
+     *
+     * @param blockInfo
+     * @throws Throwable
+     */
+    public static void throwException(String blockInfo) throws Throwable {
+        log(blockInfo);
+
+        ProcessController.throwsImmediately(new Exception(blockInfo));
+    }
+
+    /**
+     * 记录
+     * @param blockInfo
+     * @throws Throwable
+     */
+    public static void log(String blockInfo) throws Throwable {
+        // 打印
+        System.out.println(blockInfo);
+
+    }
+
+
+
+
     /**
      * 打印调用栈
      */
@@ -71,20 +108,9 @@ public class RASPManager {
         }
     }
 
-    /**
-     * 执行拦截
-     *
-     * @param blockInfo
-     * @throws Throwable
-     */
-    public static void throwException(String blockInfo) throws Throwable {
-        // 打印
-        System.out.println(blockInfo);
 
-        // todo 记录日志
 
-        ProcessController.throwsImmediately(new Exception(blockInfo));
-    }
+
 
 
 }

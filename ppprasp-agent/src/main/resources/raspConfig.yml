@@ -1,0 +1,56 @@
+# 反序列化
+rasp-deserialization:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    resolveClass: open
+
+# 表达式注入
+rasp-expression:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    spel-class: log # 还在测试
+    spel-expression: open
+    ognl-expression: open
+
+# jndi 注入
+rasp-jndi:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    lookup: open
+
+# jni 注入
+rasp-jni:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    loadLibrary: open
+
+# 命令执行
+rasp-rce:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    normal: open
+    native: open
+
+# SQL 注入
+rasp-sql:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    mysql: open
+
+
+
+
+
+

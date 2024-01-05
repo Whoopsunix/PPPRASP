@@ -81,15 +81,22 @@ cd sandbox/bin
 
 ## 表达式注入
 
-- [x] 接入黑名单
+### OGNL
 
-| Hook 点                                                      | REST API    | 备注 |
-| ------------------------------------------------------------ | ----------- | ---- |
-| org.springframework.expression.spel.standard.SpelExpression#getValue() | /spel/case1 |      |
-| 同 case1 使用 StandardEvaluationContext                      | /spel/case2 |      |
-| 同 case1 使用 MethodBasedEvaluationContext                   | /spel/case3 |      |
-| ognl.Ognl#getValue()                                         | /ognl/case1 |      |
-| ognl.Ognl#setValue()                                         | /ognl/case2 |      |
+- [x] 黑名单
+
+| Hook 点              | REST API    | 备注 |
+| -------------------- | ----------- | ---- |
+| ognl.Ognl#getValue() | /ognl/case1 |      |
+| ognl.Ognl#setValue() | /ognl/case2 |      |
+
+### SPEL
+
+- [x] 黑名单
+
+| Hook 点                                                      | REST API                            | 备注 |
+| ------------------------------------------------------------ | ----------------------------------- | ---- |
+| org.springframework.expression.spel.standard.SpelExpression#getValue() | /spel/case1 /spel/case2 /spel/case3 |      |
 
 ## JNDI 注入
 
@@ -108,18 +115,15 @@ cd sandbox/bin
 - [x] 参考 [jrasp](https://github.com/jvm-rasp/jrasp-agent) 实现了线程注入的拦截
 - [x] Jvm-sandbox 1.4.0 实现了 [native 方法的 hook](https://github.com/alibaba/jvm-sandbox/blob/c01c28ab5d7d97a64071a2aca261804c47a5347e/sandbox-core/src/main/java/com/alibaba/jvm/sandbox/core/enhance/weaver/asm/EventWeaver.java) ，因此支持拦截 `forkAndExec()`
 
-| Hook 点                             | REST API    | 备注                                 |
-| ----------------------------------- | ----------- | ------------------------------------ |
-| java.lang.ProcessBuilder.start()    | /exec/case1 | Runtime                              |
-| java.lang.ProcessBuilder.start()    | /exec/case4 | processBuilder                       |
-| 线程注入                            | /exec/case2 | 参考 jrasp 实现                      |
-| java.lang.UNIXProcess.forkAndExec() | /exec/case3 | processImpl                          |
-| java.lang.UNIXProcess.forkAndExec() | /exec/case5 | processImplUnixProcess               |
-| java.lang.UNIXProcess.forkAndExec() | /exec/case6 | processImplUnixProcessByUnsafeNative |
+| 漏洞名称 | Hook 点                             | REST API                            | 备注                                                         |
+| -------- | ----------------------------------- | ----------------------------------- | ------------------------------------------------------------ |
+| 命令执行 | java.lang.ProcessBuilder.start()    | /exec/case1 /exec/case4             | processBuilder                                               |
+| 命令执行 | 线程注入                            | /exec/case2                         | 参考 jrasp 实现                                              |
+| 命令执行 | java.lang.UNIXProcess.forkAndExec() | /exec/case3 /exec/case5 /exec/case6 | processImpl processImplUnixProcess processImplUnixProcessByUnsafeNative |
 
 ## SQL注入
 
-- [ ] 没有语义词义分析
+- [ ] 语义词义分析
 
 | Hook 点                                    | REST API         | 备注 |
 | ------------------------------------------ | ---------------- | ---- |

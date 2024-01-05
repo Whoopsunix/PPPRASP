@@ -1,4 +1,4 @@
-package com.ppprasp.agent.hook;
+package com.ppprasp.agent.hook.vul;
 
 import com.alibaba.jvm.sandbox.api.Information;
 import com.alibaba.jvm.sandbox.api.Module;
@@ -11,7 +11,9 @@ import com.ppprasp.agent.check.ExpressionChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
-import com.ppprasp.agent.common.RASPVulType;
+import com.ppprasp.agent.common.enums.Algorithm;
+import com.ppprasp.agent.common.enums.Status;
+import com.ppprasp.agent.common.enums.VulInfo;
 import com.ppprasp.agent.utils.Reflections;
 import org.kohsuke.MetaInfServices;
 
@@ -24,22 +26,30 @@ import java.util.Arrays;
  * 表达式注入
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-expression-hook", author = "Whoopsunix", version = "1.0.1")
+@Information(id = "rasp-expression", author = "Whoopsunix", version = "1.0.1")
 public class ExpressionHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
+    /**
+     * 原始的 SPEL 表达式检测
+     */
     public void checkSPELExpression() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.SPELExpression.getAlgoId(), Algorithm.SPELExpression.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
+
         try {
             String className = "org.springframework.expression.spel.standard.SpelExpression";
             String methodName = "getValue";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeBootstrap()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
+                            // 获取 hook 的对象
                             Object object = advice.getTarget();
                             String expression = (String) Reflections.getFieldValue(object, "expression");
                             RASPContext.Context context = RASPContext.getContext();
@@ -48,12 +58,12 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s triggered by %s [!]", RASPVulType.SPEL, expression, cve);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s triggered by %s [!]", VulInfo.SPEL.getDescription(), expression, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", RASPVulType.SPEL, expression);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", VulInfo.SPEL.getDescription(), expression);
                                 }
 
-                                RASPManager.throwException(blockInfo);
+                                RASPManager.scheduler(status, blockInfo);
                             }
                             super.before(advice);
                         }
@@ -64,12 +74,17 @@ public class ExpressionHook implements Module, ModuleLifecycle {
         }
     }
 
+
+    // todo 直接获取表达式解析的类，避免绕过，还需要进一步测试看看效果
     public void checkSPELClass() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.SPELClass.getAlgoId(), Algorithm.SPELClass.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
         try {
             String className = "org.springframework.expression.spel.ast.MethodReference$MethodValueRef";
             String methodName = "getValue";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeBootstrap()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
@@ -93,8 +108,9 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             if (ExpressionChecker.isDangerousSPELClass(clsName) && context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", RASPVulType.SPEL, clsName);
-                                RASPManager.throwException(blockInfo);
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", VulInfo.SPEL.getDescription(), clsName);
+
+                                RASPManager.scheduler(status, blockInfo);
                             }
 
                             super.before(advice);
@@ -106,11 +122,17 @@ public class ExpressionHook implements Module, ModuleLifecycle {
         }
     }
 
+    /**
+     * 原始的 OGNL 表达式检测
+     */
     public void checkOGNLExpression() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.OGNLExpression.getAlgoId(), Algorithm.OGNLExpression.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
         try {
             String className = "ognl.Ognl";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeBootstrap()
                     .onBehavior("getValue")
                     .onBehavior("setValue")
@@ -123,8 +145,9 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             if (ExpressionChecker.isDangerousOGNLExpression(ognl) && context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", RASPVulType.OGNL, ognl);
-                                RASPManager.throwException(blockInfo);
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, find dangerous expression %s [!]", VulInfo.OGNL.getDescription(), ognl);
+
+                                RASPManager.scheduler(status, blockInfo);
                             }
                             super.before(advice);
                         }
@@ -158,26 +181,8 @@ public class ExpressionHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        /**
-         * todo 看看覆盖的全不
-         */
-        if (RASPConfig.isCheck("rasp-expression-hook", "spelClass").equalsIgnoreCase("block")) {
-            checkSPELClass();
-        }
-
-        /**
-         * 原始的 SPEL 表达式检测
-         */
-        if (RASPConfig.isCheck("rasp-expression-hook", "spelExpression").equalsIgnoreCase("block")) {
-            checkSPELExpression();
-        }
-
-        /**
-         * 原始的 OGNL 表达式检测
-         */
-        if (RASPConfig.isCheck("rasp-expression-hook", "ognlExpression").equalsIgnoreCase("block")) {
-            checkOGNLExpression();
-        }
-
+        checkSPELClass();
+        checkSPELExpression();
+        checkOGNLExpression();
     }
 }

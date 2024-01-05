@@ -1,4 +1,4 @@
-package com.ppprasp.agent.hook;
+package com.ppprasp.agent.hook.vul;
 
 import com.alibaba.jvm.sandbox.api.Information;
 import com.alibaba.jvm.sandbox.api.Module;
@@ -10,7 +10,9 @@ import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
-import com.ppprasp.agent.common.RASPVulType;
+import com.ppprasp.agent.common.enums.Algorithm;
+import com.ppprasp.agent.common.enums.Status;
+import com.ppprasp.agent.common.enums.VulInfo;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
@@ -21,7 +23,7 @@ import javax.annotation.Resource;
  * 命令执行
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-rce-hook", author = "Whoopsunix", version = "1.1.0")
+@Information(id = "rasp-rce", author = "Whoopsunix", version = "1.1.0")
 public class RceHook implements Module, ModuleLifecycle {
 
     @Resource
@@ -31,11 +33,14 @@ public class RceHook implements Module, ModuleLifecycle {
      * java.lang.ProcessBuilder.start()
      */
     public void checkProcessBuilder() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.RCE_normal.getAlgoId(), Algorithm.RCE_normal.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
         try {
             String className = "java.lang.ProcessBuilder";
             String methodName = "start";
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeBootstrap()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
@@ -47,12 +52,12 @@ public class RceHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() triggered by %s [!]", RASPVulType.RCE, className, methodName, cve);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", RASPVulType.RCE, className, methodName);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
                                 }
 
-                                RASPManager.throwException(blockInfo);
+                                RASPManager.scheduler(status, blockInfo);
                             }
                             super.before(advice);
                         }
@@ -66,13 +71,16 @@ public class RceHook implements Module, ModuleLifecycle {
     /**
      * native java.lang.UNIXProcess.forkAndExec
      */
-    public void checkProcessImpl() {
+    public void checkNative() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.RCE_native.getAlgoId(), Algorithm.RCE_native.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
         try {
             String className = "java.lang.UNIXProcess";
             String methodName = "forkAndExec";
 
             new EventWatchBuilder(moduleEventWatcher)
-                    .onClass(Class.forName(className))
+                    .onClass(className)
                     .includeBootstrap()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
@@ -84,11 +92,12 @@ public class RceHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() triggered by %s [!]", RASPVulType.RCE, className, methodName, cve);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", RASPVulType.RCE, className, methodName);
+                                    blockInfo = String.format("[!] %s blocked by pppRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
                                 }
-                                RASPManager.throwException(blockInfo);
+
+                                RASPManager.scheduler(status, blockInfo);
                             }
 
                             super.before(advice);
@@ -121,18 +130,7 @@ public class RceHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        /**
-         * java.lang.ProcessBuilder.start()
-         */
-        if (RASPConfig.isCheck("rasp-rce-hook", "normal").equalsIgnoreCase("block")) {
-            checkProcessBuilder();
-        }
-
-        /**
-         * native java.lang.UNIXProcess.forkAndExec
-         */
-        if (RASPConfig.isCheck("rasp-rce-hook", "native").equalsIgnoreCase("block")) {
-            checkProcessImpl();
-        }
+        checkProcessBuilder();
+        checkNative();
     }
 }
