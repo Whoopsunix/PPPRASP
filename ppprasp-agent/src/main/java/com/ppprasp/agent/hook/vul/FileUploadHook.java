@@ -27,16 +27,17 @@ import java.util.Arrays;
  * 文件上传
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-fileUpload", author = "Whoopsunix", version = "1.0.0")
+@Information(id = "rasp-fileUpload", author = "Whoopsunix", version = "1.1.0")
 public class FileUploadHook implements Module, ModuleLifecycle {
 
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-    public void checkTomcat() {
+    public void checkFileItem() {
         Status status = RASPConfig.getAlgoStatus(Algorithm.File_Upload.getAlgoId(), Algorithm.File_Upload.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
+
         try {
             String className = "org.apache.tomcat.util.http.fileupload.FileItem";
             String methodName = "write";
@@ -75,51 +76,48 @@ public class FileUploadHook implements Module, ModuleLifecycle {
         } catch (Exception e) {
 
         }
+
+        try {
+            String className = "org.apache.commons.fileupload.FileItem";
+            String methodName = "write";
+            new EventWatchBuilder(moduleEventWatcher)
+                    .onClass(className)
+                    .includeBootstrap()
+                    .includeSubClasses()
+                    .onBehavior(methodName)
+                    .onWatch(new AdviceListener() {
+                        @Override
+                        protected void before(Advice advice) throws Throwable {
+                            byte[] bytes = new byte[0];
+                            Object fileName = null;
+                            Object object = advice.getTarget();
+
+                            fileName = Reflections.getFieldValue(object, "fileName");
+                            try {
+                                bytes = FileCopyUtils.copyToByteArray((File) advice.getParameterArray()[0]);
+                            } catch (Exception e) {
+
+                            }
+
+                            RASPContext.Context context = RASPContext.getContext();
+                            if (context != null) {
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by pppRASP, file name: %s, file content %s [!]", VulInfo.FileUpload.getDescription(), fileName, Arrays.toString(bytes));
+
+                                RASPManager.scheduler(status, blockInfo);
+                            }
+
+                            super.before(advice);
+                        }
+
+                    });
+        } catch (Exception e) {
+
+        }
+
     }
 
-
-//    public void checkTomcat() {
-//        Status status = RASPConfig.getAlgoStatus(Algorithm.File_Upload.getAlgoId(), Algorithm.File_Upload.getAlgoName());
-//        if (status == null || status == Status.CLOSE)
-//            return;
-//        try {
-//            String className = "org.apache.tomcat.util.http.fileupload.FileItem";
-//            String methodName = "write";
-//            new EventWatchBuilder(moduleEventWatcher)
-//                    .onClass(className)
-//                    .includeBootstrap()
-//                    .includeSubClasses()
-//                    .onBehavior(methodName)
-//                    .onWatch(new AdviceListener() {
-//                        @Override
-//                        protected void before(Advice advice) throws Throwable {
-//                            // 获取 hook 的对象
-//                            Object object = advice.getTarget();
-//                            // 上传文件名
-//                            String originalFilename = (String) Reflections.invokeMethod(object, "getOriginalFilename", new Class[]{}, new Object[]{});
-//
-//                            Object file = advice.getParameterArray()[0];
-//                            // 真正写入的文件名 如果没有修改的话 则获取的值为 file
-//                            String realName = (String) Reflections.invokeMethod(file, "getName", new Class[]{}, new Object[]{});
-//                            // 文件内容
-//                            byte[] bytes = (byte[]) Reflections.invokeMethod(object, "getBytes", new Class[]{}, new Object[]{});
-//
-//
-//                            RASPContext.Context context = RASPContext.getContext();
-//                            if (context != null) {
-//
-//
-//                                RASPManager.throwException("");
-//                            }
-//
-//                            super.before(advice);
-//                        }
-//
-//                    });
-//        } catch (Exception e) {
-//
-//        }
-//    }
 
     @Override
     public void onLoad() throws Throwable {
@@ -143,7 +141,7 @@ public class FileUploadHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkTomcat();
+        checkFileItem();
 
     }
 }

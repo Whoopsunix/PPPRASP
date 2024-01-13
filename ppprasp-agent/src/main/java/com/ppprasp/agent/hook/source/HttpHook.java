@@ -28,7 +28,7 @@ public class HttpHook implements Module, ModuleLifecycle {
     private ModuleEventWatcher moduleEventWatcher;
 
     protected HttpBundle wrapperHttpBundle(Advice advice) {
-        // 俘虏 HttpServletRequest 参数为傀儡
+        // 俘虏傀儡 HttpServletRequest 参数
         final HttpServletRequest request = InterfaceProxyUtils.puppet(HttpServletRequest.class, advice.getParameterArray()[0]);
         final HttpServletResponse response = InterfaceProxyUtils.puppet(HttpServletResponse.class, advice.getParameterArray()[1]);
 

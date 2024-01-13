@@ -13,6 +13,7 @@ public class BlackClassInfo {
      */
     public static HashMap<String, Object> sinkBlackClassMap = new HashMap<String, Object>() {{
         put("com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl", null);
+        put("org.apache.commons.collections.functors.InvokerTransformer", null);
     }};
 
     /**

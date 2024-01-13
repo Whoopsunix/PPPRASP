@@ -42,7 +42,7 @@ public enum Algorithm {
     /**
      * 文件上传
      */
-    File_Upload("rasp-file-upload", "tomcat"),
+    File_Upload("rasp-file-upload", "fileItem"),
 
     /**
      * 文件读取

@@ -102,7 +102,7 @@ public class RASPManager {
             response.setStatus(500);
             response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
-            out.println("<html><body><h1>Block by pppRASP</h1></body></html>");
+            out.println("<html><body><h1>Block by PPPRASP</h1></body></html>");
         } catch (Exception e) {
 
         }

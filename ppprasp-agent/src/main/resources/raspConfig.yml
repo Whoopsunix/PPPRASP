@@ -55,7 +55,7 @@ rasp-file-upload:
   enable: true
   # open 开启 closed 关闭 log 只记录不拦截
   algorithms:
-    tomcat: open
+    fileItem: open
 
 
 

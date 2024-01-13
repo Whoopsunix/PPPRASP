@@ -20,7 +20,7 @@ RASP 真的很适合用来学 Java，复现、分析、防护，连贯性的学�
 
 + 可以使用项目配套测试环境 [SecVulns](SecVulns) 进行测试
 + [vulnsCore](SecVulns/vulnsCore) 为漏洞代码，不同的组件引入后可以直接运行
-+ [SecVulnsREST](SecVulns/SecVulnsREST) 为 Rest Client 文件可直接发送
++ [SecVulnsREST](SecVulns/SecVulnsREST) 为 Rest Client 文件可直接发送测试用例
 
 ---------------
 
@@ -73,7 +73,7 @@ cd sandbox/bin
 
 ## 反序列化
 
-- [x] 接入黑名单
+- [x] 黑名单（只放了几个点做测试）
 
 | Hook 点                                  | REST API               | 备注 |
 | ---------------------------------------- | ---------------------- | ---- |
@@ -133,9 +133,10 @@ cd sandbox/bin
 
 - [x] 提取出文件名和文件内容
 
-| Hook 点                                                 | REST API                              | 备注 |
-| ------------------------------------------------------- | ------------------------------------- | ---- |
-| org.apache.tomcat.util.http.fileupload.FileItem.write() | /file/upload/case2 /file/upload/case4 |      |
+| 漏洞名称 | Hook 点                                                 | REST API                              | 备注 |
+| -------- | ------------------------------------------------------- | ------------------------------------- | ---- |
+| 文件上传 | org.apache.tomcat.util.http.fileupload.FileItem.write() | /file/upload/case2 /file/upload/case4 |      |
+| 文件上传 | org.apache.commons.fileupload.FileItem.write()          | /file/upload/case3                    |      |
 
 # 0x02 CVE漏洞触发检测
 
