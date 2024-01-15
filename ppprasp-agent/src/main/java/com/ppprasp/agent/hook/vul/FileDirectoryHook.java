@@ -13,65 +13,52 @@ import com.ppprasp.agent.common.RASPManager;
 import com.ppprasp.agent.common.enums.Algorithm;
 import com.ppprasp.agent.common.enums.Status;
 import com.ppprasp.agent.common.enums.VulInfo;
-import com.ppprasp.agent.utils.FileCopyUtils;
 import com.ppprasp.agent.utils.Reflections;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.util.Arrays;
 
 /**
  * @author Whoopsunix
  * <p>
- * 文件上传
+ * 文件漏洞 路径遍历
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-fileUpload", author = "Whoopsunix", version = "1.1.0")
-public class FileUploadHook implements Module, ModuleLifecycle {
+@Information(id = "rasp-file-directory", author = "Whoopsunix", version = "1.0.0")
+public class FileDirectoryHook implements Module, ModuleLifecycle {
 
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-    public void checkFileItem() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.File_Upload.getAlgoId(), Algorithm.File_Upload.getAlgoName());
+    public void checkIOList() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.File_Directory.getAlgoId(), Algorithm.File_Directory.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
 
-        new FileUploadHook().fileItem("org.apache.tomcat.util.http.fileupload.FileItem", "write", status);
-        new FileUploadHook().fileItem("org.apache.commons.fileupload.disk.DiskFileItem", "write", status);
+        ioList("java.io.File", "list", status);
+        ioList("java.io.File", "normalizedList", status);
     }
 
-    public void fileItem(String className, String methodName, Status status) {
+    public void ioList(String className, String methodName, Status status) {
         try {
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(className)
                     .includeBootstrap()
-                    .includeSubClasses()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
-                            byte[] bytes = new byte[0];
-                            Object fileName = null;
-                            Object object = advice.getTarget();
-
-                            fileName = Reflections.getFieldValue(object, "fileName");
-                            try {
-                                bytes = FileCopyUtils.copyToByteArray((File) advice.getParameterArray()[0]);
-                            } catch (Exception e) {
-
-                            }
-
                             RASPContext.Context context = RASPContext.getContext();
                             if (context != null) {
+                                // 这个为常用方法 所以先判断是否为顶层调用  减少不必要的反射
+                                Object file = advice.getTarget();
+                                Object path = Reflections.getFieldValue(file, "path");
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, file name: %s, file content %s [!]", VulInfo.FileUpload.getDescription(), fileName, Arrays.toString(bytes));
+                                String blockInfo = String.format("[!] %s blocked by pppRASP,%s.%s() file path is %s [!]", VulInfo.FileDirectory.getDescription(), className, methodName, path);
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
-
                             super.before(advice);
                         }
 
@@ -80,7 +67,6 @@ public class FileUploadHook implements Module, ModuleLifecycle {
 
         }
     }
-
 
     @Override
     public void onLoad() throws Throwable {
@@ -104,7 +90,6 @@ public class FileUploadHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkFileItem();
-
+        checkIOList();
     }
 }

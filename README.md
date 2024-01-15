@@ -138,6 +138,13 @@ cd sandbox/bin
 | 文件上传 | org.apache.tomcat.util.http.fileupload.FileItem.write() | /file/upload/case2 /file/upload/case4 |      |
 | 文件上传 | org.apache.commons.fileupload.FileItem.write()          | /file/upload/case3                    |      |
 
+## 路径遍历
+
+| 漏洞名称 | Hook 点                  | REST API              | 备注                                         |
+| -------- | ------------------------ | --------------------- | -------------------------------------------- |
+| 路径遍历 | java.io.File.listFiles() | /file/directory/case1 |                                              |
+| 路径遍历 | java.io.File.list()      | /file/directory/case2 | https://github.com/baidu/openrasp/issues/274 |
+
 # 0x02 CVE漏洞触发检测
 
 CVE 漏洞分成两类

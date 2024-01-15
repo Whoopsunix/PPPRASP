@@ -99,7 +99,7 @@ public class RASPManager {
             if (httpBundle == null)
                 return;
             HttpServletResponse response = httpBundle.getResponse();
-            response.setStatus(500);
+            response.setStatus(200);
             response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
             out.println("<html><body><h1>Block by PPPRASP</h1></body></html>");

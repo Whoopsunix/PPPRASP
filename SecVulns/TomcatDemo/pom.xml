@@ -9,7 +9,11 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.ppp.vulns.core</groupId>
+            <artifactId>vulnsCore</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>

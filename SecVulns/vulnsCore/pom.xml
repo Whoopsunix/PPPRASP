@@ -34,32 +34,33 @@
             <version>5.5.6.Final</version>
         </dependency>
         <!-- XPath -->
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>1.1.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>dom4j</groupId>-->
+<!--            <artifactId>dom4j</artifactId>-->
+<!--            <version>1.6.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>jaxen</groupId>-->
+<!--            <artifactId>jaxen</artifactId>-->
+<!--            <version>1.1.1</version>-->
+<!--        </dependency>-->
         <!-- XXE -->
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom2</artifactId>
-            <version>2.0.6</version>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.6.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jdom</groupId>-->
+<!--            <artifactId>jdom</artifactId>-->
+<!--            <version>1.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jdom</groupId>-->
+<!--            <artifactId>jdom2</artifactId>-->
+<!--            <version>2.0.6</version>-->
+<!--        </dependency>-->
+        <!-- jaxen:jaxen 中包含有-->
+<!--        <dependency>-->
+<!--            <groupId>xerces</groupId>-->
+<!--            <artifactId>xercesImpl</artifactId>-->
+<!--            <version>2.6.2</version>-->
+<!--        </dependency>-->
         <!-- SPEL -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -120,16 +121,16 @@
             <version>1.27</version>
         </dependency>
         <!-- SSRF -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.14.9</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.httpcomponents</groupId>-->
+<!--            <artifactId>httpclient</artifactId>-->
+<!--            <version>4.5.13</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.squareup.okhttp3</groupId>-->
+<!--            <artifactId>okhttp</artifactId>-->
+<!--            <version>3.14.9</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

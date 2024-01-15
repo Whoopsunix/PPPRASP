@@ -14,7 +14,9 @@ public enum VulInfo {
     RCE("RCE"),
     SQL("SQL Injection"),
     FileUpload("File Upload"),
-    FileRead("File Read");
+    FileRead("File Read"),
+    FileDirectory("File Directory")
+    ;
 
     private final String description;
 

@@ -57,7 +57,12 @@ rasp-file-upload:
   algorithms:
     fileItem: open
 
-
-
+# 路径遍历
+rasp-file-directory:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    list: open
 
 

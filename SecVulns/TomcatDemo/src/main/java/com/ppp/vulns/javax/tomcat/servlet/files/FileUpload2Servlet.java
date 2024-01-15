@@ -1,4 +1,4 @@
-package com.ppp.vulns.javax.tomcat.servlet;
+package com.ppp.vulns.javax.tomcat.servlet.files;
 
 import javax.servlet.ServletContext;
 import javax.servlet.annotation.MultipartConfig;

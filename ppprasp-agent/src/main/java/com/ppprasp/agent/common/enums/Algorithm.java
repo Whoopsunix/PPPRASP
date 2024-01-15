@@ -43,7 +43,10 @@ public enum Algorithm {
      * 文件上传
      */
     File_Upload("rasp-file-upload", "fileItem"),
-
+    /**
+     * 路径遍历
+     */
+    File_Directory("rasp-file-directory", "list"),
     /**
      * 文件读取
      */

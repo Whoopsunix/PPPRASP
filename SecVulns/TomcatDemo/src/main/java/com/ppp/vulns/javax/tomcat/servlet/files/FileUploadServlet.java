@@ -1,4 +1,4 @@
-package com.ppp.vulns.javax.tomcat.servlet;
+package com.ppp.vulns.javax.tomcat.servlet.files;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;

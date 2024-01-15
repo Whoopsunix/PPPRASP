@@ -22,7 +22,7 @@
 <!--    </servlet-mapping>-->
 <!--    <servlet>-->
 <!--        <servlet-name>FileUploadServlet</servlet-name>-->
-<!--        <servlet-class>com.ppp.vulns.javax.tomcat.servlet.FileUploadServlet</servlet-class>-->
+<!--        <servlet-class>com.ppp.vulns.javax.tomcat.servlet.files.FileUploadServlet</servlet-class>-->
 <!--    </servlet>-->
 <!--    <servlet-mapping>-->
 <!--        <servlet-name>FileUploadServlet</servlet-name>-->
