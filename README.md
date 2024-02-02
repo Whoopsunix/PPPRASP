@@ -18,9 +18,15 @@ RASP 真的很适合用来学 Java，复现、分析、防护，连贯性的学�
 
 ⭐️ 只有来自外部的请求才会进入 HOOK 点检测
 
+🛰️ 目前定位为实验性质辅助 hook 研究，暂不考虑实际应用场景，性能问题、数据交互问题均不考虑 
+
 + 可以使用项目配套测试环境 [SecVulns](SecVulns) 进行测试
 + [vulnsCore](SecVulns/vulnsCore) 为漏洞代码，不同的组件引入后可以直接运行
 + [SecVulnsREST](SecVulns/SecVulnsREST) 为 Rest Client 文件可直接发送测试用例
+
+## 数据交互
+
+关于 module 的长连接数据交互不考虑，具体原因可以看这个 [issue](https://github.com/alibaba/jvm-sandbox/issues/431)，在实际的测试中也确实发现 jetty 存在不少的意料之外的问题（还算不上 bug）
 
 ---------------
 
