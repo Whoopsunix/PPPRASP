@@ -1,4 +1,4 @@
-package com.ppprasp.agent.hook.vul;
+package com.ppprasp.agent.hook.memshell;
 
 import com.alibaba.jvm.sandbox.api.Information;
 import com.alibaba.jvm.sandbox.api.Module;
@@ -7,6 +7,7 @@ import com.alibaba.jvm.sandbox.api.listener.ext.Advice;
 import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
+import com.ppprasp.agent.check.ClassChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
@@ -19,26 +20,22 @@ import javax.annotation.Resource;
 
 /**
  * @author Whoopsunix
- *
- * 命令执行
+ * <p>
+ * Spring 内存马
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-rce", author = "Whoopsunix", version = "1.1.0")
-public class RceHook implements Module, ModuleLifecycle {
-
+@Information(id = "rasp-ms-tomcat", author = "Whoopsunix", version = "1.0.0")
+public class TomcatMemShellHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-    /**
-     * java.lang.ProcessBuilder.start()
-     */
-    public void checkProcessBuilder() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.RCE_normal.getAlgoId(), Algorithm.RCE_normal.getAlgoName());
+    public void checkExecutor() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MS_Tomcat_Executor.getAlgoId(), Algorithm.MS_Tomcat_Executor.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
-            String className = "java.lang.ProcessBuilder";
-            String methodName = "start";
+            String className = "org.apache.tomcat.util.net.AbstractEndpoint";
+            String methodName = "setExecutor";
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(className)
                     .includeBootstrap()
@@ -46,16 +43,13 @@ public class RceHook implements Module, ModuleLifecycle {
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
+                            Object executor = advice.getParameterArray()[0];
+
                             RASPContext.Context context = RASPContext.getContext();
-                            if (context != null) {
-                                String cve = RASPManager.showStackTracerWithCVECheck();
+                            if (context != null && !ClassChecker.hasLocalClassFile(executor.getClass())) {
+                                RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo;
-                                if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
-                                } else {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
-                                }
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MS_Executor.getDescription());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
@@ -68,17 +62,13 @@ public class RceHook implements Module, ModuleLifecycle {
         }
     }
 
-    /**
-     * native java.lang.UNIXProcess.forkAndExec
-     */
-    public void checkNative() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.RCE_native.getAlgoId(), Algorithm.RCE_native.getAlgoName());
+    public void checkListener() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MS_Tomcat_Listener.getAlgoId(), Algorithm.MS_Tomcat_Listener.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
-            String className = "java.lang.UNIXProcess";
-            String methodName = "forkAndExec";
-
+            String className = "org.apache.catalina.core.StandardContext";
+            String methodName = "addApplicationEventListener";
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(className)
                     .includeBootstrap()
@@ -86,22 +76,19 @@ public class RceHook implements Module, ModuleLifecycle {
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
+                            Object listener = advice.getParameterArray()[0];
+
                             RASPContext.Context context = RASPContext.getContext();
-                            if (context != null) {
-                                String cve = RASPManager.showStackTracerWithCVECheck();
+                            if (context != null && !ClassChecker.hasLocalClassFile(listener.getClass())) {
+                                RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo;
-                                if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
-                                } else {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
-                                }
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MS_Listener.getDescription());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
-
                             super.before(advice);
                         }
+
                     });
         } catch (Exception e) {
 
@@ -130,7 +117,7 @@ public class RceHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkProcessBuilder();
-        checkNative();
+        checkExecutor();
+        checkListener();
     }
 }

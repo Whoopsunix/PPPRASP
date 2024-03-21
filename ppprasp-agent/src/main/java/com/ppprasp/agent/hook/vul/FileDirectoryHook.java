@@ -55,7 +55,7 @@ public class FileDirectoryHook implements Module, ModuleLifecycle {
                                 Object path = Reflections.getFieldValue(file, "path");
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP,%s.%s() file path is %s [!]", VulInfo.FileDirectory.getDescription(), className, methodName, path);
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP,%s.%s() file path is %s [!]", VulInfo.FileDirectory.getDescription(), className, methodName, path);
 
                                 RASPManager.scheduler(status, blockInfo);
                             }

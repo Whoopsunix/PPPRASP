@@ -67,7 +67,7 @@ public class FileUploadHook implements Module, ModuleLifecycle {
                             if (context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, file name: %s, file content %s [!]", VulInfo.FileUpload.getDescription(), fileName, Arrays.toString(bytes));
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP, file name: %s, file content %s [!]", VulInfo.FileUpload.getDescription(), fileName, Arrays.toString(bytes));
 
                                 RASPManager.scheduler(status, blockInfo);
                             }

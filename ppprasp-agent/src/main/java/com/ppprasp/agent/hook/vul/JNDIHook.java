@@ -54,9 +54,9 @@ public class JNDIHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP %s, triggered by %s [!]", VulInfo.JNDI.getDescription(), url, cve);
+                                    blockInfo = String.format("[!] %s blocked by PPPRASP %s, triggered by %s [!]", VulInfo.JNDI.getDescription(), url, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP %s [!]", url, VulInfo.JNDI.getDescription());
+                                    blockInfo = String.format("[!] %s blocked by PPPRASP %s [!]", url, VulInfo.JNDI.getDescription());
                                 }
 
                                 RASPManager.scheduler(status, blockInfo);

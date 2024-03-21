@@ -59,9 +59,9 @@ public class DeserializationHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s triggered by %s [!]", VulInfo.DESERIALIZATION.getDescription(), className, cve);
+                                    blockInfo = String.format("[!] %s blocked by PPPRASP, find black class %s triggered by %s [!]", VulInfo.DESERIALIZATION.getDescription(), className, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by pppRASP, find black class %s [!]", VulInfo.DESERIALIZATION.getDescription(), className);
+                                    blockInfo = String.format("[!] %s blocked by PPPRASP, find black class %s [!]", VulInfo.DESERIALIZATION.getDescription(), className);
                                 }
 
                                 RASPManager.scheduler(status, blockInfo);

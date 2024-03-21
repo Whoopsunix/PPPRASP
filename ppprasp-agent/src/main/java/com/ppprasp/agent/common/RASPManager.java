@@ -59,7 +59,7 @@ public class RASPManager {
         try {
             // 打印调用栈
             List<String> stackList = StackTracer.getStack();
-            System.out.println("[*] Rce blocked by pppRASP, stack trace [*]");
+            System.out.println("[*] Rce blocked by PPPRASP, stack trace [*]");
             for (String stack : stackList) {
                 System.out.println(stack);
             }
@@ -77,7 +77,7 @@ public class RASPManager {
         try {
             // 打印调用栈
             List<String> stackList = StackTracer.getStack();
-            System.out.println("[*] Rce blocked by pppRASP, stack trace [*]");
+            System.out.println("[*] Rce blocked by PPPRASP, stack trace [*]");
             for (String stack : stackList) {
                 if (cve == null)
                     cve = CVEChecker.isCVE(stack);
@@ -102,7 +102,7 @@ public class RASPManager {
             response.setStatus(200);
             response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
-            out.println("<html><body><h1>Block by PPPRASP</h1></body></html>");
+            out.println("<html><body><h1>blocked by PPPRASP</h1></body></html>");
         } catch (Exception e) {
 
         }

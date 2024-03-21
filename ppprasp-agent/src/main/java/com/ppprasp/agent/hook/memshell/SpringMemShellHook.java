@@ -32,13 +32,17 @@ public class SpringMemShellHook implements Module, ModuleLifecycle {
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-    public void checkStatement() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.MS_Spring.getAlgoId(), Algorithm.MS_Spring.getAlgoName());
+    public void checkController() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MS_Spring_Controller.getAlgoId(), Algorithm.MS_Spring_Controller.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
-            String className = "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping";
-            String methodName = "registerMapping";
+//            String className = "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping";
+//            String methodName = "registerMapping";
+
+            String className = "org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry";
+            String methodName = "register";
+
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(className)
                     .includeBootstrap()
@@ -54,7 +58,7 @@ public class SpringMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(javaObject.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP,MemShell name is %s, try to add %s.%s [!]", VulInfo.MS_Spring.getDescription(), Reflections.getFieldValue(requestMappingInfo, "name"), javaObject.getClass().getName(), method.getName());
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP,MemShell name is %s, try to add %s.%s() [!]", VulInfo.MS_Controller.getDescription(), Reflections.getFieldValue(requestMappingInfo, "name"), javaObject.getClass().getName(), method.getName());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
@@ -89,6 +93,6 @@ public class SpringMemShellHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkStatement();
+        checkController();
     }
 }

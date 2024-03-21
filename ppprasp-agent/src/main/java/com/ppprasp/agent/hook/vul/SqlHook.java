@@ -54,7 +54,7 @@ public class SqlHook implements Module, ModuleLifecycle {
                             if (context != null && sql != null && SqlChecker.isDangerous(sql)) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by pppRASP, %s [!]", VulInfo.SQL.getDescription(), sql);
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP, %s [!]", VulInfo.SQL.getDescription(), sql);
 
                                 RASPManager.scheduler(status, blockInfo);
                                 

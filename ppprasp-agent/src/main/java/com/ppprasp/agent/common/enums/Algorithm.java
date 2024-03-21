@@ -55,8 +55,9 @@ public enum Algorithm {
     /**
      * 内存马
      */
-    MS_Spring("rasp-ms", "spring-controller")
-
+    MS_Spring_Controller("rasp-ms", "spring-controller"),
+    MS_Tomcat_Executor("rasp-ms", "tomcat-executor"),
+    MS_Tomcat_Listener("rasp-ms", "tomcat-listener"),
     ;
 
     private final String algoId;

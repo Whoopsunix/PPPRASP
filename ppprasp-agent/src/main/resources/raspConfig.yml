@@ -74,5 +74,7 @@ rasp-ms:
   # open 开启 closed 关闭 log 只记录不拦截
   algorithms:
     spring-controller: open
+    tomcat-executor: open
+    tomcat-listener: open
 
 

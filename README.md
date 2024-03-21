@@ -87,9 +87,11 @@ cd sandbox/bin
 
 ## 内存马
 
-| Hook 点                                                      | REST API        | 备注 |
-| ------------------------------------------------------------ | --------------- | ---- |
-| org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping#registerMapping() | 见 JavaRce 项目 |      |
+| 内存马类型        | Hook 点                                                      | REST API        | 备注 |
+| ----------------- | ------------------------------------------------------------ | --------------- | ---- |
+| Spring Controller | org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.MappingRegistry#register() | 见 JavaRce 项目 |      |
+| Tomcat Executor   | org.apache.tomcat.util.net.AbstractEndpoint#setExecutor()    |                 |      |
+| Tomcat Listener   | org.apache.catalina.core.StandardContext#addApplicationEventListener() |                 |      |
 
 ## 表达式注入
 
