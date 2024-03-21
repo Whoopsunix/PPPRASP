@@ -14,9 +14,9 @@ public enum Algorithm {
     /**
      * 表达式
      */
-    SPELClass("rasp-expression", "spel-class"),
-    SPELExpression("rasp-expression", "spel-expression"),
-    OGNLExpression("rasp-expression", "ognl-expression"),
+    SPEL_Class("rasp-expression", "spel-class"),
+    SPEL_Expression("rasp-expression", "spel-expression"),
+    OGNL_Expression("rasp-expression", "ognl-expression"),
 
     /**
      * JNDI 注入
@@ -51,6 +51,11 @@ public enum Algorithm {
      * 文件读取
      */
     File_READ("rasp-file-read", "read"),
+
+    /**
+     * 内存马
+     */
+    MS_Spring("rasp-ms", "spring-controller")
 
     ;
 

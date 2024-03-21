@@ -15,7 +15,12 @@ public enum VulInfo {
     SQL("SQL Injection"),
     FileUpload("File Upload"),
     FileRead("File Read"),
-    FileDirectory("File Directory")
+    FileDirectory("File Directory"),
+
+    /**
+     * MS
+     */
+    MS_Spring("Spring MemShell"),
     ;
 
     private final String description;

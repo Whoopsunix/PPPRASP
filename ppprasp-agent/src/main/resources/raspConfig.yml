@@ -1,7 +1,7 @@
 # 反序列化
 rasp-deserialization:
   # 是否启用该检测 true false
-  enable: true
+  enable: false
   # open 开启 closed 关闭 log 只记录不拦截
   algorithms:
     resolveClass: open
@@ -64,5 +64,15 @@ rasp-file-directory:
   # open 开启 closed 关闭 log 只记录不拦截
   algorithms:
     list: open
+
+##
+## 内存马
+##
+rasp-ms:
+  # 是否启用该检测 true false
+  enable: true
+  # open 开启 closed 关闭 log 只记录不拦截
+  algorithms:
+    spring-controller: open
 
 
