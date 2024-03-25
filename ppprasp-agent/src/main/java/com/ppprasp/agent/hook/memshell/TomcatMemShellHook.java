@@ -14,6 +14,7 @@ import com.ppprasp.agent.common.RASPManager;
 import com.ppprasp.agent.common.enums.Algorithm;
 import com.ppprasp.agent.common.enums.Status;
 import com.ppprasp.agent.common.enums.VulInfo;
+import com.ppprasp.agent.utils.Reflections;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
@@ -30,7 +31,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
     private ModuleEventWatcher moduleEventWatcher;
 
     public void checkExecutor() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.MS_Tomcat_Executor.getAlgoId(), Algorithm.MS_Tomcat_Executor.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MSTomcatExecutor.getAlgoId(), Algorithm.MSTomcatExecutor.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
@@ -49,7 +50,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(executor.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MS_Executor.getDescription());
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MSExecutor.getDescription());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
@@ -63,7 +64,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
     }
 
     public void checkListener() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.MS_Tomcat_Listener.getAlgoId(), Algorithm.MS_Tomcat_Listener.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MSTomcatListener.getAlgoId(), Algorithm.MSTomcatListener.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
@@ -82,11 +83,85 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(listener.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MS_Listener.getDescription());
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MSListener.getDescription());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
                             super.before(advice);
+                        }
+
+                    });
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void checkServlet() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MSTomcatServlet.getAlgoId(), Algorithm.MSTomcatServlet.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
+        try {
+            String className = "org.apache.catalina.core.ContainerBase";
+            String methodName = "addChildInternal";
+            new EventWatchBuilder(moduleEventWatcher)
+                    .onClass(className)
+                    .includeBootstrap()
+                    .onBehavior(methodName)
+                    .onWatch(new AdviceListener() {
+                        @Override
+                        protected void before(Advice advice) throws Throwable {
+                            Object standardWrapper = advice.getParameterArray()[0];
+
+                            Object instance = Reflections.getFieldValue(standardWrapper, "instance");
+                            Object name = Reflections.getFieldValue(standardWrapper, "name");
+
+                            RASPContext.Context context = RASPContext.getContext();
+                            if (context != null && !ClassChecker.hasLocalClassFile(instance.getClass())) {
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP, MemShell name is %s [!]", VulInfo.MSServlet.getDescription(), name);
+
+                                RASPManager.scheduler(status, blockInfo);
+                            }
+                            super.before(advice);
+                        }
+
+                    });
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void checkFilter() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MSTomcatFilter.getAlgoId(), Algorithm.MSTomcatFilter.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
+        try {
+            String className = "org.apache.catalina.core.StandardContext";
+            String methodName = "addFilterDef";
+            new EventWatchBuilder(moduleEventWatcher)
+                    .onClass(className)
+                    .includeBootstrap()
+                    .onBehavior(methodName)
+                    .onWatch(new AdviceListener() {
+                        @Override
+                        protected void before(Advice advice) throws Throwable {
+                            Object filterDef = advice.getParameterArray()[0];
+
+                            Object filterName = Reflections.getFieldValue(filterDef, "filterName");
+                            Object filterClass = Reflections.getFieldValue(filterDef, "filterClass");
+                            Object filter = Reflections.getFieldValue(filterDef, "filter");
+
+                            RASPContext.Context context = RASPContext.getContext();
+                            if (context != null && !ClassChecker.hasLocalClassFile(filter.getClass())) {
+                                RASPManager.showStackTracer();
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP, MemShell name is %s, MemShell Class is %s [!]", VulInfo.MSFilter.getDescription(), filterName, filterClass);
+
+                                RASPManager.scheduler(status, blockInfo);
+                            }
+                            super.before(advice);
+
                         }
 
                     });
@@ -119,5 +194,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
     public void loadCompleted() {
         checkExecutor();
         checkListener();
+        checkServlet();
+        checkFilter();
     }
 }

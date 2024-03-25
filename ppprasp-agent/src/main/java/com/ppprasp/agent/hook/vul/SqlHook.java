@@ -34,7 +34,7 @@ public class SqlHook implements Module, ModuleLifecycle {
      * mysql com.mysql.cj.jdbc.StatementImpl 查询
      */
     public void checkStatement() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.SQL_MYSQL.getAlgoId(), Algorithm.SQL_MYSQL.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.SQLMYSQL.getAlgoId(), Algorithm.SQLMYSQL.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {

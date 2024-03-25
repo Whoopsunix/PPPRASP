@@ -14,9 +14,9 @@ public enum Algorithm {
     /**
      * 表达式
      */
-    SPEL_Class("rasp-expression", "spel-class"),
-    SPEL_Expression("rasp-expression", "spel-expression"),
-    OGNL_Expression("rasp-expression", "ognl-expression"),
+    SPELClass("rasp-expression", "spel-class"),
+    SPELExpression("rasp-expression", "spel-expression"),
+    OGNLExpression("rasp-expression", "ognl-expression"),
 
     /**
      * JNDI 注入
@@ -31,33 +31,35 @@ public enum Algorithm {
     /**
      * 命令执行
      */
-    RCE_normal("rasp-rce", "normal"),
-    RCE_native("rasp-rce", "native"),
+    RCENormal("rasp-rce", "normal"),
+    RCENative("rasp-rce", "native"),
 
     /**
      * SQL 注入
      */
-    SQL_MYSQL("rasp-sql", "mysql"),
+    SQLMYSQL("rasp-sql", "mysql"),
 
     /**
      * 文件上传
      */
-    File_Upload("rasp-file-upload", "fileItem"),
+    FileUpload("rasp-file-upload", "fileItem"),
     /**
      * 路径遍历
      */
-    File_Directory("rasp-file-directory", "list"),
+    FileDirectory("rasp-file-directory", "list"),
     /**
      * 文件读取
      */
-    File_READ("rasp-file-read", "read"),
+    FileREAD("rasp-file-read", "read"),
 
     /**
      * 内存马
      */
-    MS_Spring_Controller("rasp-ms", "spring-controller"),
-    MS_Tomcat_Executor("rasp-ms", "tomcat-executor"),
-    MS_Tomcat_Listener("rasp-ms", "tomcat-listener"),
+    MSSpringController("rasp-ms", "spring-controller"),
+    MSTomcatExecutor("rasp-ms", "tomcat-executor"),
+    MSTomcatListener("rasp-ms", "tomcat-listener"),
+    MSTomcatServlet("rasp-ms", "tomcat-servlet"),
+    MSTomcatFilter("rasp-ms", "tomcat-filter"),
     ;
 
     private final String algoId;

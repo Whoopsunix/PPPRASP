@@ -17,7 +17,7 @@ public class WhiteClassInfo {
      */
     public static HashMap<String, Object> sinkBlackClassMap = new HashMap<String, Object>() {{
         // Tomcat jsp 页面首次访问时编译成 Java 类 FileInputStream
-        put("org.apache.jasper.JspCompilationContext", Algorithm.File_READ);
+        put("org.apache.jasper.JspCompilationContext", Algorithm.FileREAD);
     }};
 
 

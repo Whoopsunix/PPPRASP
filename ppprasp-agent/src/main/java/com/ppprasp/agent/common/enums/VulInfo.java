@@ -20,9 +20,11 @@ public enum VulInfo {
     /**
      * MS
      */
-    MS_Controller("Spring Controller MemShell"),
-    MS_Executor("Executor MemShell"),
-    MS_Listener("Listener MemShell"),
+    MSController("Spring Controller MemShell"),
+    MSExecutor("Executor MemShell"),
+    MSListener("Listener MemShell"),
+    MSServlet("Servlet MemShell"),
+    MSFilter("Filter MemShell"),
     ;
 
     private final String description;

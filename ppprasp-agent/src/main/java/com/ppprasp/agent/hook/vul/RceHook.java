@@ -33,7 +33,7 @@ public class RceHook implements Module, ModuleLifecycle {
      * java.lang.ProcessBuilder.start()
      */
     public void checkProcessBuilder() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.RCE_normal.getAlgoId(), Algorithm.RCE_normal.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.RCENormal.getAlgoId(), Algorithm.RCENormal.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
@@ -72,7 +72,7 @@ public class RceHook implements Module, ModuleLifecycle {
      * native java.lang.UNIXProcess.forkAndExec
      */
     public void checkNative() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.RCE_native.getAlgoId(), Algorithm.RCE_native.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.RCENative.getAlgoId(), Algorithm.RCENative.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {

@@ -76,5 +76,7 @@ rasp-ms:
     spring-controller: open
     tomcat-executor: open
     tomcat-listener: open
+    tomcat-servlet: open
+    tomcat-filter: open
 
 

@@ -92,6 +92,8 @@ cd sandbox/bin
 | Spring Controller | org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.MappingRegistry#register() | 见 JavaRce 项目 |      |
 | Tomcat Executor   | org.apache.tomcat.util.net.AbstractEndpoint#setExecutor()    |                 |      |
 | Tomcat Listener   | org.apache.catalina.core.StandardContext#addApplicationEventListener() |                 |      |
+| Tomcat Servlet    | org.apache.catalina.core.ContainerBase#addChildInternal()    |                 |      |
+| Tomcat Filter     | org.apache.catalina.core.StandardContext#addFilterDef()      |                 |      |
 
 ## 表达式注入
 

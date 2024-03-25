@@ -34,7 +34,7 @@ public class FileUploadHook implements Module, ModuleLifecycle {
     private ModuleEventWatcher moduleEventWatcher;
 
     public void checkFileItem() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.File_Upload.getAlgoId(), Algorithm.File_Upload.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.FileUpload.getAlgoId(), Algorithm.FileUpload.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
 

@@ -33,7 +33,7 @@ public class SpringMemShellHook implements Module, ModuleLifecycle {
     private ModuleEventWatcher moduleEventWatcher;
 
     public void checkController() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.MS_Spring_Controller.getAlgoId(), Algorithm.MS_Spring_Controller.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MSSpringController.getAlgoId(), Algorithm.MSSpringController.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
@@ -58,7 +58,7 @@ public class SpringMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(javaObject.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP,MemShell name is %s, try to add %s.%s() [!]", VulInfo.MS_Controller.getDescription(), Reflections.getFieldValue(requestMappingInfo, "name"), javaObject.getClass().getName(), method.getName());
+                                String blockInfo = String.format("[!] %s blocked by PPPRASP, MemShell name is %s, try to add %s.%s() [!]", VulInfo.MSController.getDescription(), Reflections.getFieldValue(requestMappingInfo, "name"), javaObject.getClass().getName(), method.getName());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }

@@ -35,7 +35,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
      * 原始的 SPEL 表达式检测
      */
     public void checkSPELExpression() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.SPEL_Expression.getAlgoId(), Algorithm.SPEL_Expression.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.SPELExpression.getAlgoId(), Algorithm.SPELExpression.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
 
@@ -78,7 +78,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
 
     // todo 直接获取表达式解析的类，避免绕过，还需要进一步测试看看效果
     public void checkSPELClass() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.SPEL_Class.getAlgoId(), Algorithm.SPEL_Class.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.SPELClass.getAlgoId(), Algorithm.SPELClass.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {
@@ -127,7 +127,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
      * 原始的 OGNL 表达式检测
      */
     public void checkOGNLExpression() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.OGNL_Expression.getAlgoId(), Algorithm.OGNL_Expression.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.OGNLExpression.getAlgoId(), Algorithm.OGNLExpression.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
         try {

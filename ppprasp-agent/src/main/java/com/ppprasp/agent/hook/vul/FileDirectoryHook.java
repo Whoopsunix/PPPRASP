@@ -31,7 +31,7 @@ public class FileDirectoryHook implements Module, ModuleLifecycle {
     private ModuleEventWatcher moduleEventWatcher;
 
     public void checkIOList() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.File_Directory.getAlgoId(), Algorithm.File_Directory.getAlgoName());
+        Status status = RASPConfig.getAlgoStatus(Algorithm.FileDirectory.getAlgoId(), Algorithm.FileDirectory.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
 
