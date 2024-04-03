@@ -50,7 +50,7 @@ public class JNIHook implements Module, ModuleLifecycle {
                             if (context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP, file path %s [!]", VulInfo.JNI.getDescription(), filePath);
+                                String blockInfo = String.format("[!] %s Blocked by PPPRASP, file path %s [!]", VulInfo.JNI.getDescription(), filePath);
 
                                 RASPManager.scheduler(status, blockInfo);
                             }

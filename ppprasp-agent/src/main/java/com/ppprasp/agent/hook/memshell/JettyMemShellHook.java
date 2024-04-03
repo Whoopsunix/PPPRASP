@@ -1,4 +1,4 @@
-package com.ppprasp.agent.hook.vul;
+package com.ppprasp.agent.hook.memshell;
 
 import com.alibaba.jvm.sandbox.api.Information;
 import com.alibaba.jvm.sandbox.api.Module;
@@ -7,61 +7,60 @@ import com.alibaba.jvm.sandbox.api.listener.ext.Advice;
 import com.alibaba.jvm.sandbox.api.listener.ext.AdviceListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.resource.ModuleEventWatcher;
+import com.ppprasp.agent.check.ClassChecker;
 import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
 import com.ppprasp.agent.common.enums.Algorithm;
+import com.ppprasp.agent.common.enums.Middleware;
 import com.ppprasp.agent.common.enums.Status;
 import com.ppprasp.agent.common.enums.VulInfo;
+import com.ppprasp.agent.utils.Reflections;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Method;
 
 /**
  * @author Whoopsunix
- *
- * JNDI 注入
+ * <p>
+ * Spring 内存马
  */
 @MetaInfServices(Module.class)
-@Information(id = "rasp-jndi", author = "Whoopsunix", version = "1.0.0")
-public class JNDIHook implements Module, ModuleLifecycle {
+@Information(id = "rasp-ms-jetty", author = "Whoopsunix", version = "1.0.0")
+public class JettyMemShellHook implements Module, ModuleLifecycle {
 
     @Resource
     private ModuleEventWatcher moduleEventWatcher;
 
-    public void checkNaming() {
-        Status status = RASPConfig.getAlgoStatus(Algorithm.JNDI.getAlgoId(), Algorithm.JNDI.getAlgoName());
+    public void checkListener() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.MSJettyListener.getAlgoId(), Algorithm.MSJettyListener.getAlgoName());
         if (status == null || status == Status.CLOSE)
             return;
-
         try {
-            // 接口
-            String className = "javax.naming.Context";
-            String methodName = "lookup";
+//            String className = "org.eclipse.jetty.server.handler.ContextHandler";
+//            String methodName = "addEventListener";
+            String className = "org.eclipse.jetty.server.handler.ContextHandler";
+            String methodName = "setEventListeners";
+
             new EventWatchBuilder(moduleEventWatcher)
                     .onClass(className)
                     .includeBootstrap()
-                    .includeSubClasses()
                     .onBehavior(methodName)
                     .onWatch(new AdviceListener() {
                         @Override
                         protected void before(Advice advice) throws Throwable {
-                            String url = (String) advice.getParameterArray()[0];
+                            Object[] eventListeners = (Object[]) advice.getParameterArray()[0];
+                            Object javaObject = eventListeners[0];
 
                             RASPContext.Context context = RASPContext.getContext();
-                            if (context != null) {
-                                String cve = RASPManager.showStackTracerWithCVECheck();
+                            if (context != null && !ClassChecker.hasLocalClassFile(javaObject.getClass())) {
+                                RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo;
-                                if (cve != null) {
-                                    blockInfo = String.format("[!] %s Blocked by PPPRASP %s, triggered by %s [!]", VulInfo.JNDI.getDescription(), url, cve);
-                                } else {
-                                    blockInfo = String.format("[!] %s Blocked by PPPRASP %s [!]", url, VulInfo.JNDI.getDescription());
-                                }
+                                String blockInfo = String.format("[!] %s %s Blocked by PPPRASP [!]", Middleware.Jetty.getDescription(), VulInfo.MSListener.getDescription());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
-
                             super.before(advice);
                         }
 
@@ -93,6 +92,6 @@ public class JNDIHook implements Module, ModuleLifecycle {
 
     @Override
     public void loadCompleted() {
-        checkNaming();
+        checkListener();
     }
 }

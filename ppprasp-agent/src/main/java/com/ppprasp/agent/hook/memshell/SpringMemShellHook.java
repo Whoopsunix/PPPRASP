@@ -12,6 +12,7 @@ import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
 import com.ppprasp.agent.common.enums.Algorithm;
+import com.ppprasp.agent.common.enums.Middleware;
 import com.ppprasp.agent.common.enums.Status;
 import com.ppprasp.agent.common.enums.VulInfo;
 import com.ppprasp.agent.utils.Reflections;
@@ -58,7 +59,7 @@ public class SpringMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(javaObject.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP, MemShell name is %s, try to add %s.%s() [!]", VulInfo.MSController.getDescription(), Reflections.getFieldValue(requestMappingInfo, "name"), javaObject.getClass().getName(), method.getName());
+                                String blockInfo = String.format("[!] %s %s Blocked by PPPRASP, MemShell name is %s, try to add %s.%s() [!]", Middleware.Spring.getDescription(), VulInfo.MSController.getDescription(), Reflections.getFieldValue(requestMappingInfo, "name"), javaObject.getClass().getName(), method.getName());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }

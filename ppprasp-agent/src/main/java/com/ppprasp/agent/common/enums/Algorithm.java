@@ -60,6 +60,7 @@ public enum Algorithm {
     MSTomcatListener("rasp-ms", "tomcat-listener"),
     MSTomcatServlet("rasp-ms", "tomcat-servlet"),
     MSTomcatFilter("rasp-ms", "tomcat-filter"),
+    MSJettyListener("rasp-ms", "jetty-listener"),
     ;
 
     private final String algoId;

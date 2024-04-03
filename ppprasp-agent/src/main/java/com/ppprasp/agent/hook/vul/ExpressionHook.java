@@ -59,9 +59,9 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, find dangerous expression %s triggered by %s [!]", VulInfo.SPEL.getDescription(), expression, cve);
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, find dangerous expression %s triggered by %s [!]", VulInfo.SPEL.getDescription(), expression, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, find dangerous expression %s [!]", VulInfo.SPEL.getDescription(), expression);
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, find dangerous expression %s [!]", VulInfo.SPEL.getDescription(), expression);
                                 }
 
                                 RASPManager.scheduler(status, blockInfo);
@@ -109,7 +109,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             if (ExpressionChecker.isDangerousSPELClass(clsName) && context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP, find black class %s [!]", VulInfo.SPEL.getDescription(), clsName);
+                                String blockInfo = String.format("[!] %s Blocked by PPPRASP, find black class %s [!]", VulInfo.SPEL.getDescription(), clsName);
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
@@ -146,7 +146,7 @@ public class ExpressionHook implements Module, ModuleLifecycle {
                             if (ExpressionChecker.isDangerousOGNLExpression(ognl) && context != null) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP, find dangerous expression %s [!]", VulInfo.OGNL.getDescription(), ognl);
+                                String blockInfo = String.format("[!] %s Blocked by PPPRASP, find dangerous expression %s [!]", VulInfo.OGNL.getDescription(), ognl);
 
                                 RASPManager.scheduler(status, blockInfo);
                             }

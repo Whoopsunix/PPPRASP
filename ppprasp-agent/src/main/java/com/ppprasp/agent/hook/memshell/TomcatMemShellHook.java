@@ -12,6 +12,7 @@ import com.ppprasp.agent.common.RASPConfig;
 import com.ppprasp.agent.common.RASPContext;
 import com.ppprasp.agent.common.RASPManager;
 import com.ppprasp.agent.common.enums.Algorithm;
+import com.ppprasp.agent.common.enums.Middleware;
 import com.ppprasp.agent.common.enums.Status;
 import com.ppprasp.agent.common.enums.VulInfo;
 import com.ppprasp.agent.utils.Reflections;
@@ -50,7 +51,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(executor.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MSExecutor.getDescription());
+                                String blockInfo = String.format("[!] %s %s Blocked by PPPRASP [!]", Middleware.Tomcat.getDescription(), VulInfo.MSExecutor.getDescription());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
@@ -83,7 +84,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(listener.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP [!]", VulInfo.MSListener.getDescription());
+                                String blockInfo = String.format("[!] %s %s Blocked by PPPRASP [!]", Middleware.Tomcat.getDescription(), VulInfo.MSListener.getDescription());
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
@@ -119,7 +120,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(instance.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP, MemShell name is %s [!]", VulInfo.MSServlet.getDescription(), name);
+                                String blockInfo = String.format("[!] %s %s Blocked by PPPRASP, MemShell name is %s [!]", Middleware.Tomcat.getDescription(), VulInfo.MSServlet.getDescription(), name);
 
                                 RASPManager.scheduler(status, blockInfo);
                             }
@@ -156,7 +157,7 @@ public class TomcatMemShellHook implements Module, ModuleLifecycle {
                             if (context != null && !ClassChecker.hasLocalClassFile(filter.getClass())) {
                                 RASPManager.showStackTracer();
                                 RASPManager.changeResponse(context.getHttpBundle());
-                                String blockInfo = String.format("[!] %s blocked by PPPRASP, MemShell name is %s, MemShell Class is %s [!]", VulInfo.MSFilter.getDescription(), filterName, filterClass);
+                                String blockInfo = String.format("[!] %s %s Blocked by PPPRASP, MemShell name is %s, MemShell Class is %s [!]", Middleware.Tomcat.getDescription(), VulInfo.MSFilter.getDescription(), filterName, filterClass);
 
                                 RASPManager.scheduler(status, blockInfo);
                             }

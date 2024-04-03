@@ -52,9 +52,9 @@ public class RceHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
                                 }
 
                                 RASPManager.scheduler(status, blockInfo);
@@ -92,9 +92,9 @@ public class RceHook implements Module, ModuleLifecycle {
                                 RASPManager.changeResponse(context.getHttpBundle());
                                 String blockInfo;
                                 if (cve != null) {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, %s.%s() triggered by %s [!]", VulInfo.RCE.getDescription(), className, methodName, cve);
                                 } else {
-                                    blockInfo = String.format("[!] %s blocked by PPPRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, %s.%s() [!]", VulInfo.RCE.getDescription(), className, methodName);
                                 }
 
                                 RASPManager.scheduler(status, blockInfo);
