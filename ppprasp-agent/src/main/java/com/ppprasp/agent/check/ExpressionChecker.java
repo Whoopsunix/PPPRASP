@@ -10,29 +10,16 @@ import com.ppprasp.agent.check.info.BlackClassInfo;
 public class ExpressionChecker {
 
     /**
-     * SPEL 语句检查
+     * 危险类检查 语句检查
      * @param expression
      * @return
      */
-    public static boolean isDangerousSPELExpression(String expression) {
+    public static boolean isDangerousClass(String expression) {
         for (String className: BlackClassInfo.dangerousBlackClassMap.keySet()){
-            if (expression.contains(className)) {
+            if (expression.equalsIgnoreCase(className)) {
                 return true;
             }
         }
-        return false;
-    }
-
-    /**
-     * SPEL 类检查
-     * @param className
-     * @return
-     */
-    public static boolean isDangerousSPELClass(String className) {
-        if (BlackClassInfo.dangerousBlackClassMap.containsKey(className)) {
-            return true;
-        }
-
         return false;
     }
 

@@ -7,8 +7,10 @@ package com.ppprasp.agent.common.enums;
  */
 public enum VulInfo {
     DESERIALIZATION("Deserialization"),
+    XMLDeserialization("XMLDeserialization"),
     SPEL("SPEL Expression"),
     OGNL("OGNL Expression"),
+    JXpath("JXpath Expression"),
     JNI("JNI file load"),
     JNDI("JNDI Injection"),
     RCE("RCE"),

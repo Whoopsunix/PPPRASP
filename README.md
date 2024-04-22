@@ -81,9 +81,10 @@ cd sandbox/bin
 
 - [x] 黑名单（只放了几个点做测试）
 
-| Hook 点                                  | REST API               | 备注 |
-| ---------------------------------------- | ---------------------- | ---- |
-| java.io.ObjectInputStream#resolveClass() | /deserialization/case1 |      |
+| 漏洞名称     | Hook 点                                                      | REST API               | 备注 |
+| ------------ | ------------------------------------------------------------ | ---------------------- | ---- |
+| 原生反序列化 | java.io.ObjectInputStream#resolveClass()                     | /deserialization/case1 |      |
+| XML 反序列化 | org.springframework.context.support.AbstractXmlApplicationContext.<init> |                        |      |
 
 ## 内存马
 
@@ -108,11 +109,11 @@ cd sandbox/bin
 
 ### SPEL
 
-- [x] 黑名单
+- [x] 类黑名单
 
-| Hook 点                                                      | REST API                            | 备注 |
-| ------------------------------------------------------------ | ----------------------------------- | ---- |
-| org.springframework.expression.spel.standard.SpelExpression#getValue() | /spel/case1 /spel/case2 /spel/case3 |      |
+| Hook 点                                                 | REST API                            | 备注 |
+| ------------------------------------------------------- | ----------------------------------- | ---- |
+| org.springframework.expression.MethodExecutor#execute() | /spel/case1 /spel/case2 /spel/case3 |      |
 
 ## JNDI 注入
 

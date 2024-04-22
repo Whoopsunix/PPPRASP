@@ -1,10 +1,11 @@
 # 反序列化
 rasp-deserialization:
   # 是否启用该检测 true false
-  enable: false
+  enable: true
   # open 开启 closed 关闭 log 只记录不拦截
   algorithms:
     resolveClass: open
+    xml: open
 
 # 表达式注入
 rasp-expression:
@@ -12,9 +13,9 @@ rasp-expression:
   enable: true
   # open 开启 closed 关闭 log 只记录不拦截
   algorithms:
-    spel-class: log # 还在测试
-    spel-expression: open
-    ognl-expression: open
+    spel: open
+    ognl: open
+    jxpath: open
 
 # jndi 注入
 rasp-jndi:

@@ -28,9 +28,14 @@ public class Reflections {
         field.set(obj, value);
     }
 
-    public static Object getFieldValue(final Object obj, final String fieldName) throws Exception {
-        final Field field = getField(obj.getClass(), fieldName);
-        return field.get(obj);
+    public static Object getFieldValue(final Object obj, final String fieldName) {
+        try {
+            final Field field = getField(obj.getClass(), fieldName);
+            return field.get(obj);
+        }catch (Exception e){
+
+        }
+        return null;
     }
 
     public static Constructor<?> getFirstCtor(final String name) throws Exception {
@@ -65,12 +70,15 @@ public class Reflections {
     }
 
     public static Object invokeMethod(Object obj, String methodName, Class[] argsClass, Object[] args) throws Exception {
-        Method method;
         try {
-            method = obj.getClass().getDeclaredMethod(methodName, argsClass);
-        } catch (NoSuchMethodException e) {
-            method = obj.getClass().getSuperclass().getDeclaredMethod(methodName, argsClass);
+            return invokeMethod(obj.getClass(), obj, methodName, argsClass, args);
+        }catch (Exception e){
+            return invokeMethod(obj.getClass().getSuperclass(), obj, methodName, argsClass, args);
         }
+    }
+
+    public static Object invokeMethod(Class cls, Object obj, String methodName, Class[] argsClass, Object[] args) throws Exception {
+        Method method = cls.getDeclaredMethod(methodName, argsClass);
         method.setAccessible(true);
         Object object = method.invoke(obj, args);
         return object;

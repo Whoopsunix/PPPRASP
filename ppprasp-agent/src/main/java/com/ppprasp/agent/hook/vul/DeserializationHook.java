@@ -21,7 +21,7 @@ import java.io.ObjectStreamClass;
 
 /**
  * @author Whoopsunix
- *
+ * <p>
  * 反序列化
  */
 @MetaInfServices(Module.class)
@@ -76,6 +76,50 @@ public class DeserializationHook implements Module, ModuleLifecycle {
         }
     }
 
+    public void checkXML() {
+        Status status = RASPConfig.getAlgoStatus(Algorithm.XMLDeserialization.getAlgoId(), Algorithm.XMLDeserialization.getAlgoName());
+        if (status == null || status == Status.CLOSE)
+            return;
+
+        try {
+            String className = "org.springframework.context.support.AbstractXmlApplicationContext";
+            String methodName = "<init>";
+            new EventWatchBuilder(moduleEventWatcher)
+                    .onClass(className)
+                    .includeBootstrap()
+                    .includeSubClasses()
+                    .onBehavior(methodName)
+                    .onWatch(new AdviceListener() {
+                        @Override
+                        protected void before(Advice advice) throws Throwable {
+                            String className = advice.getTarget().getClass().getName();
+
+                            String url = (String) advice.getParameterArray()[0];
+
+                            RASPContext.Context context = RASPContext.getContext();
+                            if ((className.equalsIgnoreCase("org.springframework.context.support.ClassPathXmlApplicationContext")
+                                    || className.equalsIgnoreCase("org.springframework.context.support.FileSystemXmlApplicationContext")) && context != null) {
+                                String cve = RASPManager.showStackTracerWithCVECheck();
+                                RASPManager.changeResponse(context.getHttpBundle());
+                                String blockInfo;
+                                if (cve != null) {
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, find black class %s, url: %s triggered by %s [!]", VulInfo.XMLDeserialization.getDescription(), className, url, cve);
+                                } else {
+                                    blockInfo = String.format("[!] %s Blocked by PPPRASP, find black class %s, url: %s [!]", VulInfo.XMLDeserialization.getDescription(), className, url);
+                                }
+
+                                RASPManager.scheduler(status, blockInfo);
+                            }
+
+                            super.before(advice);
+                        }
+
+                    });
+        } catch (Exception e) {
+
+        }
+    }
+
     @Override
     public void onLoad() throws Throwable {
 
@@ -99,5 +143,6 @@ public class DeserializationHook implements Module, ModuleLifecycle {
     @Override
     public void loadCompleted() {
         checkResolveClass();
+        checkXML();
     }
 }

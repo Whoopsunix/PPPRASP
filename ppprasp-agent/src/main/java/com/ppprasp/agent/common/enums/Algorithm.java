@@ -10,13 +10,15 @@ public enum Algorithm {
      * 反序列化
      */
     Deserialization("rasp-deserialization", "resolveClass"),
+    XMLDeserialization("rasp-deserialization", "xml"),
 
     /**
      * 表达式
      */
-    SPELClass("rasp-expression", "spel-class"),
-    SPELExpression("rasp-expression", "spel-expression"),
-    OGNLExpression("rasp-expression", "ognl-expression"),
+//    SPELClass("rasp-expression", "spel-class"),
+    SPEL("rasp-expression", "spel"),
+    OGNL("rasp-expression", "ognl"),
+    JXpath("rasp-expression", "ognl"),
 
     /**
      * JNDI 注入
